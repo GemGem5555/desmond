@@ -153,7 +153,8 @@ section+section{margin-top:76px}
 
 /* image treatment: HUD frame + hover RGB split */
 .hud{position:relative;margin:0;max-width:100%}
-.hud img{display:block;width:100%;height:100%;object-fit:cover}
+.hud img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 20%}
+.hud img[src*="standing"]{object-position:50% 0}
 .hud::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;
   background:
     linear-gradient(var(--yellow),var(--yellow)) left top/22px 2px no-repeat,
@@ -248,7 +249,8 @@ table.spec td{color:#c9cfda}
 .quotes cite{display:block;font-style:normal;font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.1em;margin-top:4px}
 .strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .strip figure{margin:0;display:grid;gap:8px}
-.strip .hud{aspect-ratio:4/5;border:1px solid var(--line);overflow:hidden}
+
+.strip .hud{aspect-ratio:2/3;border:1px solid var(--line);overflow:hidden}
 .strip figcaption{font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.06em}
 .cap-egg{all:unset;cursor:pointer;display:inline-flex;vertical-align:-3px;margin-left:6px;color:#2f5f9e;opacity:.45;transition:opacity .2s}
 .cap-egg:hover,.cap-egg:focus-visible{opacity:1;outline:1px dashed #2f5f9e;outline-offset:3px}
@@ -417,7 +419,7 @@ footer .wrap{display:grid;gap:6px}
 
 @media (max-width:900px){
   .hero,.sysHead,.two,.intr{grid-template-columns:minmax(0,1fr)}
-  .hero .hud{aspect-ratio:4/5;max-height:none}
+  .hero .hud{aspect-ratio:2/3;max-height:none}
   .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
   .fileBody{grid-template-columns:minmax(0,1fr)}
   .fileBody .photo{border-right:0;border-bottom:1px solid var(--line);grid-template-columns:140px minmax(0,1fr);align-items:center}
