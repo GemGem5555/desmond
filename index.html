@@ -1,8 +1,1390 @@
 <!doctype html>
-<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Desmond — скоро</title>
-<style>html,body{margin:0;height:100%;background:#0a0b0e;color:#d8dde6;font-family:ui-monospace,Menlo,Consolas,monospace}
-main{height:100%;display:grid;place-items:center;text-align:center;padding:16px}
-h1{font-size:clamp(28px,8vw,64px);letter-spacing:.3em;margin:0;color:#fff}
-p{color:#e0303f;letter-spacing:.2em;font-size:13px}</style></head>
-<body><main><div><h1>DESMOND</h1><p>// ACCESS PENDING — СКОРО</p></div></main></body></html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Desmond — Night Corp">
+<meta property="og:description" content="Night Corp собрала его заново. Он благодарен. Он не помнит, за что. Cyberpunk 2077 RP bot.">
+<meta property="og:image" content="https://gemgem5555.github.io/desmond/img/og.jpg">
+<meta property="og:url" content="https://gemgem5555.github.io/desmond/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#06070b">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2306070b'/%3E%3Cpath d='M6 5h12l8 8v14H6z' fill='none' stroke='%23fcee0a' stroke-width='3'/%3E%3C/svg%3E">
+<style>body{margin:0}img{max-width:100%}</style>
+<title>Desmond Dossier</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Desmond — Cyberpunk 2077 roleplay bot. Personnel file, Night City lore and story paths.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Unbounded:wght@500;700;800&family=Tektur:wght@500;700;800&family=IBM+Plex+Sans+Condensed:wght@500;600&display=swap">
+<style>
+/* Layout: Night Corp personnel file rendered as a Night City HUD.
+   Yellow = interface (the game's UI color), neon red = Desmond / his past / warnings,
+   cyan = the system (Kiroshi, CN-07). Cut corners, scanlines, RGB-split glitch. Single dark world. */
+:root{
+  --asphalt:#06070b;
+  --panel:#0c0f16;
+  --panel-2:#111622;
+  --line:#2a3040;
+  --ink:#eef1f6;
+  --mute:#929bad;
+  --faint:#5a6376;
+  --yellow:#fcee0a;
+  --red:#ff2a4f;
+  --red-dim:#6e1426;
+  --ice:#00f0ff;
+  --ice-dim:#0d4f5a;
+  --bar:#000;
+  --display:"Tektur","Unbounded","Arial Black",system-ui,sans-serif;
+  --cond:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --accent:var(--yellow);
+  --cut:14px;
+  color-scheme:dark;
+}
+body.sys{--accent:var(--ice)}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background:var(--asphalt)}
+body{background:var(--asphalt);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  background-image:
+    radial-gradient(900px 600px at 100% -10%,rgba(255,42,79,.16),transparent 60%),
+    radial-gradient(800px 600px at -10% 40%,rgba(0,240,255,.09),transparent 60%),
+    linear-gradient(rgba(0,240,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,240,255,.035) 1px,transparent 1px);
+  background-size:auto,auto,48px 48px,48px 48px;background-attachment:fixed}
+body.sys{background-image:
+    radial-gradient(900px 600px at 100% -10%,rgba(0,240,255,.16),transparent 60%),
+    radial-gradient(800px 600px at -10% 40%,rgba(255,42,79,.07),transparent 60%),
+    linear-gradient(rgba(0,240,255,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,240,255,.05) 1px,transparent 1px)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--asphalt)}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;mix-blend-mode:overlay;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 3px)}
+a{color:inherit}
+::selection{background:var(--yellow);color:#000}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.wrap{max-width:1160px;margin:0 auto;position:relative;z-index:1}
+h1,h2,h3{text-wrap:balance;margin:0}
+p{margin:0}
+.mono{font-family:var(--mono)}
+.label{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+
+/* cut-corner panel: clip + drawn diagonal edges */
+.cut{--bc:var(--line);--bgc:var(--panel);border:1px solid var(--bc);
+  clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,var(--cut) 100%,0 calc(100% - var(--cut)));
+  background:
+    linear-gradient(45deg,transparent calc(50% - .8px),var(--bc) calc(50% - .8px) calc(50% + .8px),transparent calc(50% + .8px)) right -1px top -1px/var(--cut) var(--cut) no-repeat,
+    linear-gradient(45deg,transparent calc(50% - .8px),var(--bc) calc(50% - .8px) calc(50% + .8px),transparent calc(50% + .8px)) left -1px bottom -1px/var(--cut) var(--cut) no-repeat,
+    var(--bgc)}
+
+.tag{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  padding:2px 8px;border:1px solid var(--line);color:var(--mute);white-space:nowrap}
+.tag.canon{border-color:var(--yellow);color:var(--yellow)}
+.tag.author{border-color:var(--ice);color:var(--ice);box-shadow:0 0 8px rgba(0,240,255,.25)}
+.tag.red{border-color:var(--red);color:var(--red)}
+
+/* glitch text: data-text layers in red/cyan */
+.glitch{position:relative;display:inline-block}
+.glitch::before,.glitch::after{content:attr(data-text);position:absolute;inset:0;pointer-events:none}
+.glitch::before{color:var(--ice);transform:translate(-2px,0);clip-path:inset(0 0 100% 0);animation:gA 4.6s infinite steps(1)}
+.glitch::after{color:var(--red);transform:translate(2px,0);clip-path:inset(0 0 100% 0);animation:gB 4.6s infinite steps(1)}
+@keyframes gA{0%,88%,100%{clip-path:inset(0 0 100% 0)}89%{clip-path:inset(12% 0 60% 0);transform:translate(-5px,0)}91%{clip-path:inset(55% 0 20% 0);transform:translate(4px,0)}93%{clip-path:inset(78% 0 4% 0);transform:translate(-3px,0)}}
+@keyframes gB{0%,88%,100%{clip-path:inset(0 0 100% 0)}89%{clip-path:inset(40% 0 35% 0);transform:translate(5px,0)}91%{clip-path:inset(5% 0 80% 0);transform:translate(-4px,0)}94%{clip-path:inset(66% 0 12% 0);transform:translate(3px,0)}}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:rgba(6,7,11,.9);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--yellow);box-shadow:0 1px 14px rgba(252,238,10,.15);
+  margin:0 calc(-1*max(16px,env(safe-area-inset-right,0px))) 0 calc(-1*max(16px,env(safe-area-inset-left,0px)))}
+body.sys .top{border-bottom-color:var(--ice);box-shadow:0 1px 14px rgba(0,240,255,.2)}
+.top .wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px))}
+.brand{font-family:var(--display);font-weight:800;font-size:16px;letter-spacing:.2em;text-decoration:none;display:flex;align-items:center;gap:10px;color:var(--yellow);text-shadow:0 0 10px rgba(252,238,10,.5)}
+body.sys .brand{color:var(--ice);text-shadow:0 0 10px rgba(0,240,255,.6)}
+.brand small{font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spacing:.12em;color:var(--faint);text-shadow:none}
+nav.links{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
+nav.links a{font-family:var(--cond);font-weight:600;font-size:14px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;color:var(--mute);padding:5px 14px;
+  clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
+nav.links a:hover{color:var(--yellow);background:rgba(252,238,10,.08)}
+nav.links a[aria-current="page"]{color:#000;background:var(--yellow)}
+nav.links a.locked{color:var(--red);text-shadow:0 0 8px rgba(255,42,79,.5)}
+nav.links a.sysl{color:var(--ice)}
+nav.links a.sysl[aria-current="page"]{background:var(--ice);color:#001417}
+.lang{display:flex;border:1px solid var(--line)}
+.lang button{all:unset;cursor:pointer;font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;padding:5px 9px;color:var(--mute)}
+.lang button[aria-pressed="true"]{background:var(--red);color:#fff}
+.lang button:focus-visible{outline:2px solid var(--accent)}
+
+/* ticker */
+.ticker{position:relative;z-index:1;overflow:hidden;white-space:nowrap;border-bottom:1px solid var(--line);
+  margin:0 calc(-1*max(16px,env(safe-area-inset-right,0px))) 0 calc(-1*max(16px,env(safe-area-inset-left,0px)));
+  background:repeating-linear-gradient(135deg,rgba(252,238,10,.06) 0 10px,transparent 10px 20px),#08090d}
+.ticker .run{display:inline-flex;gap:0;padding:6px 0;animation:run 48s linear infinite;font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--yellow)}
+.ticker .run span{padding-right:48px}
+.ticker .run span:nth-child(3n+2){color:var(--ice)}
+.ticker .run span:nth-child(3n){color:var(--red)}
+@keyframes run{to{transform:translateX(-50%)}}
+
+main{padding-block:44px 72px}
+main.jolt{animation:jolt .32s steps(2)}
+@keyframes jolt{0%{filter:drop-shadow(4px 0 0 rgba(255,42,79,.7)) drop-shadow(-4px 0 0 rgba(0,240,255,.7));transform:translateX(3px)}50%{filter:drop-shadow(-3px 0 0 rgba(255,42,79,.6)) drop-shadow(3px 0 0 rgba(0,240,255,.6));transform:translateX(-2px)}100%{filter:none;transform:none}}
+section+section{margin-top:76px}
+.sechead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-bottom:12px;margin-bottom:28px;position:relative;border-bottom:1px solid var(--line)}
+.sechead::after{content:"";position:absolute;left:0;bottom:-1px;width:120px;height:3px;background:var(--accent);box-shadow:0 0 12px var(--accent)}
+.sechead::before{content:"//";font-family:var(--mono);color:var(--accent);font-size:16px}
+.sechead h2{font-family:var(--display);font-weight:800;font-size:clamp(20px,3vw,30px);letter-spacing:.04em;text-transform:uppercase}
+.sechead .label{margin-left:auto}
+.lead{font-size:18px;line-height:1.65;max-width:62ch;color:var(--ink)}
+.prose{max-width:66ch;display:grid;gap:14px;color:#c9cfda}
+.prose strong{color:var(--yellow);font-weight:600}
+
+/* redaction */
+.rd{position:relative;display:inline-block;vertical-align:-0.15em;height:1.1em;width:var(--w,8ch);background:var(--bar);
+  box-shadow:0 0 0 1px #000,inset 0 0 0 1px #1a1d25;cursor:help;outline-offset:2px}
+.rd .rd-in{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+  font-size:11px;letter-spacing:.12em;color:transparent;transition:color .15s;white-space:nowrap;overflow:hidden}
+.rd:hover .rd-in,.rd:focus .rd-in,.rd.open .rd-in{color:#4f5768}
+.rd.key:hover,.rd.key:focus,.rd.key.open{box-shadow:0 0 0 1px var(--red),0 0 12px rgba(255,42,79,.55)}
+.rd.key:hover .rd-in,.rd.key:focus .rd-in,.rd.key.open .rd-in{color:var(--red);text-shadow:0 0 8px rgba(255,42,79,.8)}
+.rd.key.seen::after{content:"";position:absolute;right:-3px;top:-3px;width:5px;height:5px;background:var(--red);box-shadow:0 0 6px var(--red)}
+
+/* image treatment: HUD frame + hover RGB split */
+.hud{position:relative;margin:0;max-width:100%}
+.hud img{display:block;width:100%;height:100%;object-fit:cover}
+.hud::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;
+  background:
+    linear-gradient(var(--yellow),var(--yellow)) left top/22px 2px no-repeat,
+    linear-gradient(var(--yellow),var(--yellow)) left top/2px 22px no-repeat,
+    linear-gradient(var(--yellow),var(--yellow)) right bottom/22px 2px no-repeat,
+    linear-gradient(var(--yellow),var(--yellow)) right bottom/2px 22px no-repeat,
+    repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 3px)}
+.hud.ice::before{background:
+    linear-gradient(var(--ice),var(--ice)) left top/22px 2px no-repeat,
+    linear-gradient(var(--ice),var(--ice)) left top/2px 22px no-repeat,
+    linear-gradient(var(--ice),var(--ice)) right bottom/22px 2px no-repeat,
+    linear-gradient(var(--ice),var(--ice)) right bottom/2px 22px no-repeat,
+    repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 3px)}
+.hud.redf::before{background:
+    linear-gradient(var(--red),var(--red)) left top/22px 2px no-repeat,
+    linear-gradient(var(--red),var(--red)) left top/2px 22px no-repeat,
+    linear-gradient(var(--red),var(--red)) right bottom/22px 2px no-repeat,
+    linear-gradient(var(--red),var(--red)) right bottom/2px 22px no-repeat,
+    repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 3px)}
+.hud:hover img{animation:rgb .5s steps(2) 1}
+@keyframes rgb{0%{filter:drop-shadow(5px 0 0 rgba(255,42,79,.8)) drop-shadow(-5px 0 0 rgba(0,240,255,.8))}50%{filter:drop-shadow(-3px 0 0 rgba(255,42,79,.7)) drop-shadow(3px 0 0 rgba(0,240,255,.7)) saturate(1.4)}100%{filter:none}}
+.scan{position:absolute;left:0;right:0;height:60px;top:-60px;z-index:2;pointer-events:none;
+  background:linear-gradient(transparent,rgba(0,240,255,.16),transparent);animation:scan 5s linear infinite}
+@keyframes scan{to{top:100%}}
+
+/* HOME */
+.hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:40px;align-items:end}
+.hero .text{display:grid;gap:22px;padding-bottom:12px;min-width:0}
+.hero h1{font-family:var(--display);font-weight:800;font-size:clamp(48px,9.5vw,116px);line-height:.88;letter-spacing:.02em;
+  text-transform:uppercase;color:var(--yellow);text-shadow:0 0 18px rgba(252,238,10,.45),0 0 2px rgba(252,238,10,.9)}
+.hero h1 .glitch::before,.hero h1 .glitch::after{text-shadow:none}
+.hero .tagline{font-family:var(--cond);font-weight:500;font-size:clamp(21px,2.4vw,27px);line-height:1.35;max-width:30ch;color:var(--ink)}
+.hero .tagline em{font-style:normal;color:var(--red);text-shadow:0 0 6px rgba(255,42,79,.9),0 0 22px rgba(255,42,79,.55);animation:flick 6s infinite}
+@keyframes flick{0%,18%,22%,62%,64%,100%{opacity:1}19%,21%,63%{opacity:.35;text-shadow:none}}
+.metaRow{display:flex;gap:8px;flex-wrap:wrap}
+.metaRow .tag:first-child{background:var(--yellow);color:#000;border-color:var(--yellow);font-weight:500}
+.hero .hud{aspect-ratio:2/3;max-height:660px;border:1px solid var(--line);overflow:hidden;box-shadow:0 0 40px rgba(255,42,79,.18)}
+.hero .hud figcaption{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:10px 14px;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--yellow);background:linear-gradient(transparent,rgba(0,0,0,.9))}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.tile{--bgc:var(--panel);padding:22px 20px 20px;text-decoration:none;display:grid;gap:10px;align-content:start;min-height:180px;transition:transform .15s}
+.tile:hover{--bc:var(--yellow);--bgc:var(--panel-2);transform:translateY(-2px)}
+.tile .num{font-family:var(--mono);font-size:11px;color:var(--yellow);letter-spacing:.14em}
+.tile h3{font-family:var(--display);font-weight:700;font-size:19px;text-transform:uppercase;letter-spacing:.05em}
+.tile:hover h3{color:var(--yellow);text-shadow:0 0 10px rgba(252,238,10,.5)}
+.tile p{color:var(--mute);font-size:14.5px;line-height:1.5}
+.tile.lockedTile{--bc:var(--red-dim)}
+.tile.lockedTile .num{color:var(--red)}
+.tile.lockedTile h3{color:var(--red);text-shadow:0 0 10px rgba(255,42,79,.5)}
+.tile.lockedTile:hover{--bc:var(--red)}
+.tile.sysTile{--bc:var(--ice);--bgc:#061a1f}
+.tile.sysTile .num,.tile.sysTile h3{color:var(--ice);text-shadow:0 0 10px rgba(0,240,255,.5)}
+.warn{--bc:var(--red);--bgc:#12070b;padding:24px;display:grid;gap:14px;position:relative}
+.warn .hz{height:8px;margin:-24px -24px 6px;background:repeating-linear-gradient(135deg,var(--yellow) 0 12px,#000 12px 24px)}
+.warn .row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.warn .age{font-family:var(--display);font-weight:800;font-size:30px;color:var(--red);text-shadow:0 0 14px rgba(255,42,79,.7)}
+.warn ul{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0;padding:0}
+.warn li{font-family:var(--mono);font-size:12px;border:1px solid var(--red-dim);padding:4px 9px;color:var(--ink)}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px}
+
+/* DOSSIER */
+.file{--bc:var(--yellow);--bgc:var(--panel);--cut:20px}
+.fileHead{display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:space-between;padding:12px 24px 12px 20px;background:var(--yellow);color:#000}
+.fileHead .label{color:#000;font-weight:500}
+.fileHead .stamp{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#000;border:1px solid #000;padding:2px 8px}
+.fileBody{display:grid;grid-template-columns:280px minmax(0,1fr);gap:0}
+.fileBody .photo{border-right:1px solid var(--line);padding:20px;display:grid;gap:14px;align-content:start}
+.fileBody .photo .hud{aspect-ratio:1;border:1px solid var(--line)}
+.fields{padding:20px 24px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 28px;align-content:start}
+.field{display:grid;gap:3px;min-width:0}
+.field .label{color:var(--yellow)}
+.field .v{font-size:15.5px}
+.field.wide{grid-column:1/-1}
+.blk{padding:22px}
+.blk .sechead::before{content:none}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
+.eval{display:grid;gap:0}
+.eval .item{display:grid;grid-template-columns:220px minmax(0,1fr);gap:20px;padding:16px 0;border-top:1px solid var(--line)}
+.eval .item:first-child{border-top:0;padding-top:0}
+.eval h3{font-family:var(--cond);font-weight:600;font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
+.eval p{color:#c9cfda}
+.score{display:flex;gap:3px;margin-top:8px}
+.score i{width:16px;height:6px;background:var(--line);transform:skewX(-20deg)}
+.score i.on{background:var(--yellow);box-shadow:0 0 6px rgba(252,238,10,.6)}
+table.spec{width:100%;border-collapse:collapse;font-size:14.5px}
+table.spec th,table.spec td{text-align:left;padding:10px 12px 10px 0;border-top:1px solid var(--line);vertical-align:top}
+table.spec th{font-family:var(--cond);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--yellow);white-space:nowrap;width:1%}
+table.spec td{color:#c9cfda}
+.tblwrap{overflow-x:auto}
+.quotes{display:grid;gap:12px}
+.quotes blockquote{margin:0;padding:10px 0 10px 16px;border-left:2px solid var(--red);box-shadow:-6px 0 12px -8px var(--red);font-family:var(--cond);font-size:19px;color:var(--ink)}
+.quotes cite{display:block;font-style:normal;font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.1em;margin-top:4px}
+.strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.strip figure{margin:0;display:grid;gap:8px}
+.strip .hud{aspect-ratio:4/5;border:1px solid var(--line);overflow:hidden}
+.strip figcaption{font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.06em}
+.cap-egg{all:unset;cursor:pointer;display:inline-flex;vertical-align:-3px;margin-left:6px;color:#2f5f9e;opacity:.45;transition:opacity .2s}
+.cap-egg:hover,.cap-egg:focus-visible{opacity:1;outline:1px dashed #2f5f9e;outline-offset:3px}
+
+/* BREACH */
+.breach{--bc:var(--red);--bgc:#090509;--cut:22px;padding:30px 26px;display:grid;gap:20px;justify-items:start;position:relative;overflow:hidden}
+.breach::after{content:"";position:absolute;right:-40px;top:0;bottom:0;width:45%;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(0deg,transparent 0 22px,rgba(255,42,79,.06) 22px 23px),
+  linear-gradient(90deg,transparent,rgba(255,42,79,.08))}
+.breach .bhead{display:grid;gap:6px;position:relative;z-index:1}
+.breach h2{font-family:var(--display);font-weight:800;font-size:clamp(22px,3.4vw,32px);text-transform:uppercase}
+.gl{all:unset;cursor:pointer;font-family:var(--display);font-weight:800;font-size:clamp(18px,3vw,24px);letter-spacing:.14em;text-transform:uppercase;
+  padding:16px 30px;background:var(--yellow);color:#000;position:relative;z-index:1;box-shadow:0 0 24px rgba(252,238,10,.35);
+  clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px))}
+.gl:hover{background:#fff35a;box-shadow:0 0 34px rgba(252,238,10,.6)}
+.gl:focus-visible{outline:3px solid var(--ice);outline-offset:4px}
+.gl span{position:relative;display:inline-block;animation:glitch 3.2s infinite steps(1)}
+.gl.sysgo{background:var(--ice);box-shadow:0 0 24px rgba(0,240,255,.4)}
+@keyframes glitch{
+  0%,86%,100%{transform:none;text-shadow:none;clip-path:none}
+  87%{transform:translate(-3px,0);text-shadow:3px 0 var(--ice),-3px 0 var(--red);clip-path:inset(10% 0 55% 0)}
+  89%{transform:translate(3px,1px);text-shadow:-2px 0 var(--ice),2px 0 var(--red);clip-path:inset(60% 0 5% 0)}
+  91%{transform:translate(-1px,-1px);text-shadow:2px 0 var(--ice);clip-path:none}
+  93%{transform:none;text-shadow:-3px 0 var(--red)}
+}
+.term{width:100%;max-width:660px;font-family:var(--mono);font-size:14px;display:grid;gap:10px;position:relative;z-index:1}
+.term .out{display:grid;gap:4px;color:var(--mute);min-height:1.6em}
+.term .out .ok{color:var(--ice);text-shadow:0 0 8px rgba(0,240,255,.6)}
+.term .out .bad{color:var(--red);text-shadow:0 0 8px rgba(255,42,79,.6)}
+.term form{display:flex;gap:0;border:1px solid var(--ice);background:#000;box-shadow:0 0 16px rgba(0,240,255,.15)}
+.term label.pr{padding:10px 0 10px 12px;color:var(--ice);flex:none}
+.term input{all:unset;flex:1;min-width:0;padding:10px 12px;color:var(--ice);font-family:var(--mono);font-size:16px;letter-spacing:.24em;text-transform:uppercase}
+.term input::placeholder{color:#1f5961}
+.term button{all:unset;cursor:pointer;padding:10px 16px;background:var(--ice);color:#001417;font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase}
+.term button:hover{background:#7ff8ff}
+.term button:focus-visible{outline:2px solid var(--yellow)}
+.hint{font-size:13px;color:var(--yellow);border-left:2px solid var(--yellow);padding-left:10px}
+.found{display:flex;gap:6px;flex-wrap:wrap}
+.found span{font-family:var(--mono);font-size:14px;width:30px;height:34px;display:grid;place-items:center;border:1px solid var(--line);color:var(--faint);background:#000}
+.found span.on{color:var(--red);border-color:var(--red);box-shadow:0 0 10px rgba(255,42,79,.45);text-shadow:0 0 6px var(--red)}
+
+/* TRUTH */
+.sysHead{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);gap:36px;align-items:center}
+.sysHead h1{font-family:var(--display);font-weight:800;font-size:clamp(34px,6vw,68px);line-height:.95;text-transform:uppercase;color:var(--ice);
+  text-shadow:0 0 18px rgba(0,240,255,.5),0 0 2px rgba(0,240,255,.9)}
+.sysHead h1 .glitch::before,.sysHead h1 .glitch::after{text-shadow:none}
+.sysHead .hud{border:1px solid var(--ice-dim);aspect-ratio:4/5;overflow:hidden;box-shadow:0 0 40px rgba(0,240,255,.15)}
+.readout{font-family:var(--mono);font-size:13px;display:grid;gap:4px;color:var(--mute)}
+.readout b{color:var(--ice);font-weight:500}
+.readout b.redv{color:var(--red)}
+.traits{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.traits div{--bc:var(--red-dim);--bgc:#0e080b;padding:18px;display:grid;gap:8px;align-content:start}
+.traits h3{font-family:var(--cond);font-weight:600;font-size:15px;letter-spacing:.12em;text-transform:uppercase;color:var(--red);text-shadow:0 0 8px rgba(255,42,79,.5)}
+.traits p{font-size:14.5px;color:#c9cfda}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.pair .hud{aspect-ratio:3/4;border:1px solid var(--red-dim);overflow:hidden}
+.seg{display:inline-flex;border:1px solid var(--line);margin-bottom:18px}
+.seg button{all:unset;cursor:pointer;font-family:var(--cond);font-weight:600;font-size:14px;letter-spacing:.12em;text-transform:uppercase;padding:8px 20px;color:var(--mute)}
+.seg button[aria-pressed="true"].b{background:var(--red);color:#fff;box-shadow:0 0 16px rgba(255,42,79,.5)}
+.seg button[aria-pressed="true"].a{background:var(--ice);color:#001417;box-shadow:0 0 16px rgba(0,240,255,.5)}
+.seg button:focus-visible{outline:2px solid var(--yellow);outline-offset:-2px}
+.ba{--bgc:var(--panel);padding:4px 0}
+.ba.before{--bc:var(--red)}
+.ba.after{--bc:var(--ice)}
+.ba .r{display:grid;grid-template-columns:220px minmax(0,1fr);gap:20px;padding:14px 20px;border-top:1px solid var(--line)}
+.ba .r:first-child{border-top:0}
+.ba .r h3{font-family:var(--cond);font-weight:600;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
+.ba .r p{transition:opacity .2s}
+.ba.before .r p{color:#ffc9d2}
+.ba.after .r p{color:#c8fbff}
+.ba.flick .r p{opacity:.1}
+.chain{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.chain div{--bc:var(--ice-dim);--bgc:#061317;padding:18px;display:grid;gap:8px;align-content:start;position:relative}
+.chain h3{font-family:var(--cond);font-weight:600;font-size:15px;letter-spacing:.06em;color:var(--ice);text-shadow:0 0 8px rgba(0,240,255,.5)}
+.chain p{font-size:14.5px;color:#c9cfda}
+.chain .ar{font-family:var(--mono);font-size:11px;color:var(--ice);letter-spacing:.1em}
+ol.stages{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+ol.stages li{--bc:var(--line);--bgc:var(--panel);display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:18px;align-items:start;padding:16px 20px}
+ol.stages .n{font-family:var(--display);font-weight:800;font-size:24px;color:var(--ice);text-shadow:0 0 10px rgba(0,240,255,.5)}
+ol.stages h3{font-family:var(--cond);font-weight:600;font-size:17px;letter-spacing:.04em}
+ol.stages p{font-size:14.5px;color:#c9cfda;margin-top:2px}
+ol.stages li.live{--bc:var(--ice);--bgc:#061a1f}
+.chip{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--line);color:var(--mute);white-space:nowrap}
+.chip.live{border-color:var(--ice);color:#001417;background:var(--ice);animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.55}}
+.edits{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.edits div{--bgc:var(--panel);padding:16px;display:grid;gap:8px;align-content:start}
+.edits h3{font-family:var(--cond);font-weight:600;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--yellow)}
+.edits p{font-size:14px;color:#c9cfda}
+.edits .ex{font-family:var(--mono);font-size:12.5px;color:var(--ice)}
+.intr{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:32px;align-items:start}
+.intr figure{margin:0}
+.intr .hud{border:1px solid var(--red-dim);overflow:hidden}
+.intr ul{list-style:none;margin:0;padding:0;display:grid;gap:0;border-top:1px solid var(--line)}
+.intr li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.intr li b{font-weight:600;color:var(--red)}
+.intr li span{color:#c9cfda}
+.axes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.axes div{--bc:var(--ice-dim);--bgc:#061317;padding:16px;display:grid;gap:8px;align-content:start}
+.axes h3{font-family:var(--cond);font-weight:600;font-size:16px;letter-spacing:.06em;color:var(--ice)}
+.axes p{font-size:14.5px;color:#c9cfda}
+.sealed{--bc:var(--yellow);--bgc:#0d0c05;padding:20px;display:grid;gap:10px;max-width:720px}
+.sealed .label{color:var(--yellow)!important}
+.relock{all:unset;cursor:pointer;font-family:var(--mono);font-size:12px;color:var(--faint);text-decoration:underline}
+
+/* LORE */
+.filter{display:flex;gap:10px;align-items:center;border:1px solid var(--yellow);background:#0b0b06;padding:0 12px;max-width:460px;margin-bottom:32px;box-shadow:0 0 14px rgba(252,238,10,.12)}
+.filter input{all:unset;flex:1;min-width:0;padding:11px 0;font-size:15px}
+.filter input::placeholder{color:var(--faint)}
+.lg>h3.label{color:var(--yellow)!important}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.card{--bgc:var(--panel);padding:18px;display:grid;gap:8px;align-content:start;transition:transform .15s}
+.card:hover{--bc:var(--yellow);transform:translateY(-2px)}
+.card .h{display:flex;gap:10px;align-items:baseline;justify-content:space-between;flex-wrap:wrap}
+.card h3{font-family:var(--cond);font-weight:600;font-size:17.5px;letter-spacing:.02em}
+.card p{font-size:14.5px;color:#c9cfda}
+.slang{width:100%;border-collapse:collapse;font-size:14.5px}
+.slang td{padding:9px 14px 9px 0;border-top:1px solid var(--line);vertical-align:top}
+.slang td:first-child{font-family:var(--mono);color:var(--yellow);white-space:nowrap}
+.slang td:nth-child(2){font-family:var(--mono);color:var(--ice);white-space:nowrap}
+.slang td:last-child{color:#c9cfda}
+.empty{color:var(--faint);font-family:var(--mono);font-size:13px}
+
+/* PATHS */
+.paths{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.path{--bgc:var(--panel);--cut:18px;display:grid;grid-template-rows:auto 1fr;transition:transform .15s}
+.path:hover{transform:translateY(-2px)}
+.path .ph{display:flex;gap:18px;align-items:center;padding:20px 20px 16px;border-bottom:1px solid var(--line)}
+.path .ico{width:66px;height:66px;flex:none;display:grid;place-items:center;border:1px solid currentColor;background:#000;
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px))}
+.path .ico svg{width:38px;height:38px;filter:drop-shadow(0 0 6px currentColor)}
+.path .code{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--faint)}
+.path h3{font-family:var(--display);font-weight:800;font-size:22px;text-transform:uppercase;letter-spacing:.04em}
+.path .pb{padding:18px 20px 22px;display:grid;gap:14px;align-content:start}
+.path .hook{font-family:var(--cond);font-size:18px;color:var(--ink);line-height:1.45}
+.path dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 16px;margin:0;font-size:14.5px}
+.path dt{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);padding-top:2px}
+.path dd{margin:0;color:#c9cfda}
+.path .tags{display:flex;gap:6px;flex-wrap:wrap}
+.path.p1{--bc:var(--ice-dim)} .path.p1 .ico,.path.p1 h3{color:var(--ice)} .path.p1:hover{--bc:var(--ice)}
+.path.p2{--bc:var(--red-dim)} .path.p2 .ico,.path.p2 h3{color:var(--red)} .path.p2:hover{--bc:var(--red)}
+.path.p3{--bc:#24406a} .path.p3 .ico,.path.p3 h3{color:#5aa2ff} .path.p3:hover{--bc:#5aa2ff}
+.path.p4{--bc:#5c5711} .path.p4 .ico,.path.p4 h3{color:var(--yellow)} .path.p4:hover{--bc:var(--yellow)}
+.path h3{text-shadow:0 0 10px currentColor}
+.notes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.notes div{border-top:2px solid var(--yellow);padding-top:12px;display:grid;gap:6px}
+.notes h3{font-family:var(--cond);font-weight:600;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--yellow)}
+.notes p{font-size:14.5px;color:#c9cfda}
+
+footer{border-top:1px solid var(--line);padding-block:24px 40px;color:var(--faint);font-size:13px;position:relative;z-index:1}
+footer .wrap{display:grid;gap:6px}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.8);display:grid;place-items:center;
+  padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.modal .box{--bc:#3b74c4;--bgc:#081224;max-width:460px;width:100%;padding:24px;display:grid;gap:14px;box-shadow:0 0 40px rgba(59,116,196,.3)}
+.modal .box svg{color:#5aa2ff;filter:drop-shadow(0 0 8px #5aa2ff)}
+.modal h2{font-family:var(--mono);font-weight:500;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#8fbfff}
+.modal p{font-size:15px;color:#c9d6ea}
+.modal p.riddle{font-family:var(--mono);color:var(--ice);font-size:14px}
+.modal button{all:unset;cursor:pointer;justify-self:start;font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;border:1px solid #3b74c4;padding:8px 14px;color:#c9d6ea}
+.modal button:focus-visible{outline:2px solid var(--ice)}
+
+.fade{animation:fadein .35s ease-out}
+@keyframes fadein{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+@media (max-width:900px){
+  .hero,.sysHead,.two,.intr{grid-template-columns:minmax(0,1fr)}
+  .hero .hud{aspect-ratio:4/5;max-height:none}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .fileBody{grid-template-columns:minmax(0,1fr)}
+  .fileBody .photo{border-right:0;border-bottom:1px solid var(--line);grid-template-columns:140px minmax(0,1fr);align-items:center}
+  .cards,.traits,.chain,.edits{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .paths,.notes,.axes,.grid2{grid-template-columns:minmax(0,1fr)}
+  .eval .item,.ba .r{grid-template-columns:minmax(0,1fr);gap:6px}
+}
+@media (max-width:560px){
+  body{font-size:15.5px}
+  .top .wrap{gap:10px}
+  nav.links{margin-left:0;order:3;width:100%}
+  nav.links a{padding:5px 10px;font-size:13px}
+  .lang{margin-left:auto}
+  .tiles,.cards,.traits,.chain,.edits{grid-template-columns:minmax(0,1fr)}
+  .fields{grid-template-columns:minmax(0,1fr)}
+  .fileBody .photo{grid-template-columns:96px minmax(0,1fr)}
+  .strip{gap:6px}
+  .strip figcaption{font-size:10px}
+  ol.stages li{grid-template-columns:44px minmax(0,1fr)}
+  ol.stages li .chip{grid-column:2;justify-self:start}
+  .intr li{grid-template-columns:minmax(0,1fr);gap:4px}
+  .pair{gap:8px}
+  table.spec,table.spec tbody,table.spec tr{display:block}
+  table.spec th,table.spec td{display:block;width:auto;white-space:normal;padding-right:0}
+  table.spec th{padding-bottom:2px}
+  table.spec td{border-top:0;padding-top:0}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#home">DESMOND <small>NC·IS·0736</small></a>
+    <nav class="links" id="nav" aria-label="Sections"></nav>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" id="lang-ru" data-l="ru">RU</button>
+      <button type="button" id="lang-en" data-l="en">EN</button>
+    </div>
+  </div>
+</header>
+<div class="ticker" aria-hidden="true"><div class="run" id="tick"></div></div>
+
+<main class="wrap" id="view" tabindex="-1"></main>
+
+<footer><div class="wrap" id="foot"></div></footer>
+
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="modal-t">
+  <div class="cut box" id="modal-box"></div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- storage (best effort) ---------- */
+const store = {
+  get(k){ try{ return localStorage.getItem(k) }catch(e){ return null } },
+  set(k,v){ try{ localStorage.setItem(k,v) }catch(e){} },
+  del(k){ try{ localStorage.removeItem(k) }catch(e){} }
+};
+let lang = store.get('desmond-lang') === 'en' ? 'en' : 'ru';
+let unlocked = store.get('desmond-unlocked') === '1';
+let seen = new Set((store.get('desmond-seen')||'').split('').filter(Boolean));
+let fails = 0;
+let baMode = 'after';
+
+/* ---------- password ---------- */
+const KEY = 'MIRROR';
+const ACCEPT = ['MIRROR','ЗЕРКАЛО','ЬШККЩК','PTHRFKJ'];
+
+/* redaction bar. k = index (1..6) of a key letter, or 0 */
+function R(w, k){
+  if(k){
+    return `<span class="rd key${seen.has(String(k))?' seen':''}" tabindex="0" data-k="${k}" style="--w:${w}ch" aria-label="${lang==='ru'?'Закрытые данные':'Redacted'}"><span class="rd-in">[${k}] ${KEY[k-1]}</span></span>`;
+  }
+  return `<span class="rd" tabindex="0" style="--w:${w}ch" aria-label="${lang==='ru'?'Закрытые данные':'Redacted'}"><span class="rd-in">${lang==='ru'?'ЗАКРЫТО':'SEALED'}</span></span>`;
+}
+
+/* ---------- icons ---------- */
+const ICON = {
+  cup:`<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 13h18l-2.2 21H13.2L11 13z"/><path d="M10 13h20M12.5 9h15l1 4h-17z"/><path d="M14 21h12"/><path d="M17 4c-1 1.2 1 2 0 3.4M22 4c-1 1.2 1 2 0 3.4"/></svg>`,
+  cuffs:`<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="24" r="7"/><circle cx="28" cy="24" r="7"/><path d="M12 17v-4M28 17v-4M12 13h16"/><path d="M8 34h24"/></svg>`,
+  cap:`<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 25c0-9 6-15 13-15s13 6 13 15"/><path d="M7 25h26"/><path d="M33 25c3 0 5 1.2 5 2.6S35 30 30 30H16"/><path d="M20 10v-1.5"/><circle cx="17" cy="18" r="1.6" fill="currentColor"/></svg>`,
+  cursor:`<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" aria-hidden="true"><rect x="5" y="9" width="30" height="22"/><path d="M10 25h6"><animate attributeName="opacity" values="1;0;1" dur="1.1s" repeatCount="indefinite"/></path><path d="M10 15h12M10 19h8" opacity=".35"/></svg>`
+};
+const capSmall = `<svg width="18" height="18" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 25c0-9 6-15 13-15s13 6 13 15"/><path d="M7 25h26"/><path d="M33 25c3 0 5 1.2 5 2.6S35 30 30 30H16"/><circle cx="17" cy="18" r="1.6" fill="currentColor"/></svg>`;
+
+/* ---------- copy ---------- */
+const T = {
+ru:{
+  nav:{home:'Главная',dossier:'Досье',lore:'Лор',paths:'Пути',truth:'Правда',locked:'████'},
+  tick:['Night Corp · внутренняя безопасность','Kiroshi v4.2.7 · синхронизация 87%','Объект NC-IS-0736 · статус: стабилен','NCPD · дело закрыто по запросу третьей стороны','Центр · кислотный дождь · видимость 400 м','Маглев-туннель · строительство возобновлено','Плановая калибровка оптики · 06:00','CN-07 · ████████'],
+  foot:`<p>Фан-проект по вселенной Cyberpunk 2077. Найт-Сити, Night Corp, Kiroshi и прочие названия мира принадлежат CD PROJEKT RED. Персонаж, авторский лор и арты принадлежат автору бота.</p><p class="mono" style="font-size:11.5px">NC·IS // ДОКУМЕНТ ДЛЯ ВНУТРЕННЕГО ПОЛЬЗОВАНИЯ</p>`,
+  home:{
+    meta:['Cyberpunk 2077','Найт-Сити','начало 2078'],
+    tag:`Night Corp собрала его заново. Он благодарен. <em>Он не помнит, за что.</em>`,
+    pitch:`Десмонд — двухметровый силовик Night Corp на хроме. В конце 2077-го вражеский нетраннер едва не выжег ему мозги, а корпорация оплатила месяцы реабилитации, новую оптику и тихое место во внутренней безопасности. Теперь он сдержанный, заботливый, грубоватый мужик, который приносит напарнице кофе и злится, когда кого-то загоняют в угол. Коллеги говорят: «Дес, тебя не узнать». Он отвечает: «Мне мозги поджарили, чего вы хотели».`,
+    pitch2:`Бот для текстового ролевого отыгрыша: карточка персонажа, лорбук по Найт-Сити и тайна, которую игрок раскрывает сам.`,
+    cap:'Северный фасад башни Night Corp, 02:40',
+    secs:'Разделы',
+    tiles:[
+      ['dossier','Досье','Официальное личное дело сотрудника. Хорошая характеристика и много чёрных плашек.'],
+      ['lore','Лор','Найт-Сити для тех, кто не играл или забыл: районы, банды, корпорации, сленг.'],
+      ['paths','Пути','Три завязки и одна пустая. Кем ты придёшь к Десмонду.'],
+    ],
+    lockT:['████','Доступ закрыт. Чтобы открыть этот раздел, взломай досье.'],
+    openT:['Правда','Рассекреченные данные: кем он был и что с ним сделали.'],
+    warnT:'Перед игрой',
+    warn:'Бот для взрослых. В истории есть:',
+    warnList:['насилие и пытки','убийство','садизм в прошлом героя','вмешательство в личность без согласия','откровенные сцены, доминирование','мат'],
+    whereT:'Где играть',
+    where:`Карточка рассчитана на SillyTavern и похожие фронтенды. Вместе с карточкой подключи лорбук <span class="mono">Cyberpunk CN-07</span>: в нём город, люди вокруг Десмонда и всё, что от него скрыто.`,
+    whereLink:'Ссылка на карточку появится здесь'
+  },
+  dossier:{
+    title:'Личное дело',
+    head:'NIGHT CORP · ВНУТРЕННЯЯ БЕЗОПАСНОСТЬ · ФАЙЛ СОТРУДНИКА',
+    stamp:'Восстановлен в должности',
+    photoCap:'Фото на пропуск, обновлено после реабилитации',
+    f:[
+      ['Имя','Десмонд Кравец'],
+      ['Табельный номер','NC-IS-0736'],
+      ['Отдел','Внутренняя безопасность, ночная смена'],
+      ['Должность','Следователь'],
+      ['Уровень допуска','2'],
+      ['Возраст','36'],
+      ['Рост / вес','196 см / 130+ кг'],
+      ['Предыдущее назначение',()=>`Тактическое крыло, группа ${R(6)}`],
+      ['Происхождение','Нортсайд, Уотсон'],
+      ['Проживание',()=>`Глен, Хейвуд. Двухуровневый пентхаус`],
+    ],
+    lookT:'Внешность',
+    look:`Огромный и тяжёлый: фигура силача, а не скульптурные мышцы. Шея почти шире головы, в дверные проёмы проходит чуть боком. Пепельно-русый ёжик, вечная щетина, серо-зелёные глаза. Тяжёлое славянское лицо от отца, дважды сломанный нос. Косой шрам через щёку и переносицу, тонкий угловатый шов от нейрохирургии на левом виске, штрихкод на шее. Двигается тяжелее, чем выглядит, и быстрее, чем от него ждут.`,
+    medT:'Медицинская справка',
+    med:[
+      ['Травма','Нейрокибернетический ожог. Атака вражеского нетраннера во время рейда кочевников на стройку маглев-туннеля, конец 2077. Оптика и нейроинтерфейс выжжены.'],
+      ['Реабилитация',()=>`${R(3)} месяцев, клиника компании. Установлена новая оптика.`],
+      ['Наблюдение','Плановая калибровка оптики. После калибровки допустимы головная боль и резкий свет в течение нескольких часов.'],
+      ['Побочные эффекты',()=>`Частичные провалы в памяти (ожидаемо после ожога). ${R(14,1)}`],
+      ['Медкарта',()=>`${R(18)} <span class="tag red">допуск 4</span>`],
+    ],
+    chromeT:'Импланты',
+    chrome:[
+      ['Руки «Горилла»','От середины предплечья: тяжёлый каркас из пластин и тяг цвета оружейного металла, полностью механические кисти. Холодные на ощупь.'],
+      ['Подкожная броня','Грудь и шея. Усиленные сухожилия и голеностопы.'],
+      ['Оптика Kiroshi','Корпоративная, новая. Установлена при реабилитации, цвет радужки подстроен под родной серо-зелёный.'],
+      ['Нейроинтерфейс',()=>`Порты у основания черепа. Свежие рубцы на висках и затылке. ${R(10,2)}`],
+      ['ОС «Берсерк»','Установлена. Сотрудник почти не активирует.'],
+    ],
+    evalT:'Характеристика руководителя',
+    eval:[
+      ['Самоконтроль',4,'Вспыльчив, но управляет реакцией. Конфликты гасит паузой: понижает голос, выходит из помещения. Срывов на рабочем месте не зафиксировано, кроме одного повреждённого шкафчика.'],
+      ['Защита персонала',5,'Вмешивается в чужие конфликты, даже когда это его не касается. Отмечается избыточная опека: коллеги жалуются, что он заставляет их есть.'],
+      ['Кризисные ситуации',5,'Под огнём самый спокойный человек в помещении: короткие команды, ясные приоритеты. Вне службы склонен к опасной езде.'],
+      ['Работа с людьми',4,()=>`Наблюдателен, хорошо считывает ложь. Различает виновных и просто напуганных. Задержанные жалоб не подают. ${R(12,3)}`],
+      ['Лояльность компании',5,'Высокая. Открыто выражает благодарность компании за лечение. Резко реагирует на шутки про «корпоративного пса».'],
+    ],
+    prevT:'Служебная история',
+    prev:[
+      ['до 2071',()=>`Частные контракты через фиксеров, частная охрана. ${R(16)}`],
+      ['2071–2077',()=>`Тактическое крыло. Извлечения, охрана объектов, ${R(20,4)}`],
+      ['конец 2077','Тяжёлое ранение на стройке маглев-туннеля.'],
+      ['2078','Перевод во внутреннюю безопасность.'],
+      ['Профиль до травмы',()=>`${R(22,5)}`],
+    ],
+    persT:'Личное',
+    pers:()=>`Мотоцикл, быстрая машина и пустая трасса ночью. Спортзал. Крепкий чёрный кофе, дешёвая уличная еда, громкая музыка в машине. Курит, меньше, чем раньше. Не любит корпоративный канцелярит, задир, жалость, медотсеки и сидеть без дела. Родственники: отец, Роман Кравец (контакт не поддерживается). Мать умерла. ${R(8,6)}`,
+    quotesT:'Из записей разговоров',
+    quotes:[['Дыши. Всё нормально. Я разберусь.','ночная смена, 41-й этаж'],['Поешь что-нибудь, выглядишь хреново.','комната отдыха'],['Хм. Не помню такого.','коридор у лифтов']],
+    stripT:'Материалы наблюдения',
+    strip:[['car','Личный автомобиль, Центр'],['standing','Вне смены'],['mirror','Санузел, 06:12. Синхронизация оптики 87%']],
+    breachT:'Доступ к полному файлу',
+    breachSub:'Часть данных закрыта на уровне 4. У тебя уровень 2.',
+    breachBtn:'Рассекретить',
+    prompt:'Введи ключ доступа',
+    go:'Ввод',
+    found:'Найдено фрагментов ключа',
+    deny:n=>`ОТКАЗАНО. Неверный ключ. Попытка ${n}.`,
+    hint:'СИСТЕМА: ключ лежит под плашками этого файла. Наведи курсор или нажми на них.',
+    steps:['обход ICE уровня 4…','подбор сессии…','снятие плашек…','ДОСТУП ПОЛУЧЕН'],
+    ph:'______'
+  },
+  cap:{t:'Объект без описи',p:'Синяя бейсболка. Рваная дыра над козырьком, края вывернуты наружу. В описи изъятых вещей не значится.',r:'Ключ — то, во что он смотрит каждое утро.',c:'Положить на место'},
+  truth:{
+    readout:[['ОБЪЕКТ','Десмонд, NC-IS-0736'],['ПРОТОКОЛ','CN-07 / Carpe Noctem'],['СТАДИЯ','IV, поддержание'],['ОСВЕДОМЛЁН','нет']],
+    h1:'Его не починили. Его переписали.',
+    lead:`Пока Десмонд лежал в медотсеке после маглева, Night Corp без его ведома и согласия провела на нём эксперимент по изменению личности. Он не знает об этом. Новая личность для него настоящая: это не маска и не второй голос в голове. Он искренне такой, какой есть сейчас. Просто таким он стал не сам.`,
+    s1:'Кем он был',
+    origin:`<p>Вырос в Нортсайде, промзоне Уотсона, на краю территории Мальстрёма. Отец, русский мигрант, бил не за что-то, а когда попадёшь под горячую руку. Мать относилась к нему скорее как к собутыльнику, чем как к сыну, и помогала мусорщикам заманивать людей, которых потом разбирали на хром и органы. Тело как набор деталей, чужая боль как издержки производства: это он слышал с детства.</p>
+<p>Подростком бегал по поручениям Мальстрёма. Полноценным мальстрёмовцем не стал: хотел стать тем, кого боятся даже они.</p>
+<p><strong>Развилка.</strong> В девятнадцать, через год после смерти матери, у него был настоящий выход: старик Марко из мотомастерской в Уотсоне взял его учеником, платил стабильно, говорил про курсы. Десмонд проработал несколько месяцев, руки у него для моторов оказались хорошие, а потом ушёл на заказы через фиксеров. Улица платила больше и разрешала делать людям больно. Никто его не заставлял.</p>
+<p>Дальше частная охрана и полевая группа Night Corp под началом Хейла. Извлечения, запугивание, допросы. На допросах ему было плевать на информацию. Его интересовали часы до неё. Сослуживцы до сих пор с теплом вспоминают «подвал в Нортсайде» и «бабу из Biotechnica».</p>`,
+    traitsT:'Шесть черт прежнего Десмонда',
+    traits:[
+      ['Взрывной','Давление быстро превращалось в насилие, а через пять минут он уже смеялся, будто ничего не было.'],
+      ['Садист','Наслаждался болью и страхом. Важно было, чтобы жертва понимала, кто распоряжается её телом.'],
+      ['Эйфория хаоса','Перестрелки, погони и пожары его смешили. Скука была опасна: от скуки он сам начинал проблемы.'],
+      ['Показная власть','Ноги на столе, сигарета в чужом кабинете, публичное унижение. Власть должна быть видна.'],
+      ['Чтение людей','Мгновенно ловил страх, ложь и слабость и почти всегда читал нервозность как слабость, которую можно использовать.'],
+      ['Цепной пёс','Служил тому, кто платит за хром и разрешает насилие, и смотрел сверху вниз на всех ниже себя.'],
+    ],
+    s2:'До и после',
+    baBefore:'До',baAfter:'После',
+    ba:[
+      ['Чужой страх','Удовольствие. Давил сильнее.','Тревога и желание помочь. Садится, понижает голос, отходит.'],
+      ['Раздражение','Сразу в действие: крик, удар, вещи в стену.','Пауза. «Дай мне минуту». Спортзал или пустая трасса.'],
+      ['Хаос и опасность','Эйфория. Смеялся и провоцировал.','Всё ещё оживает, но собирается и выводит людей.'],
+      ['Допрос','Любимая часть работы. Часы до информации.','Тошнота. Старое тело узнаёт комнату и инструмент.'],
+      ['Близость','Секс за деньги, без привязанности. Ушёл сразу после.','Важно, с кем. Остаётся, хотя тянет встать и уйти.'],
+      ['Night Corp','Хозяин, который разрешает быть чудовищем.','Компания, которая спасла ему жизнь. Он ей должен.'],
+    ],
+    s3:'Что с ним сделали',
+    hkT:'Зеркальный тест',
+    hk:`<p><span class="tag canon">канон</span> В данных, украденных Сандрой Дорсетт, есть внутренний отчёт Night Corp об операции Carpe Noctem. ИИ под названием CN-07 научился обходить защиту устройств рядовых сотрудников. Испытуемые не знали, что на них ставят опыт. Объект HK-13, изначально «спокойный и эмпатичный», после скрытого обусловливания стал психопатом: задушил коллегу из-за спора о кофе и выпрыгнул из окна шестнадцатого этажа.</p>
+<p><span class="tag author">авторский лор</span> Десмонд — зеркальное отражение этого опыта. HK-13 превратили из эмпатичного в психопата. Садиста Десмонда повели в обратную сторону, и «спокойный и эмпатичный» — это буквально его целевой профиль. Знает об этом небольшая исследовательская группа и тот, кто подписал разрешение наверху. Внутренняя безопасность, Хейл и Рейес не знают.</p>`,
+    chainT:'Как это устроено',
+    chain:[
+      ['Оптика Kiroshi','Скрытая прошивка. Датчик и канал: лица, реакции, обстановка и его собственное поведение.'],
+      ['Нейроинтерфейс','Вносит локальные поправки в эмоциональные и поведенческие реакции.'],
+      ['CN-07','Сравнивает увиденное с целевым профилем и решает: держать курс или скорректировать.'],
+      ['Серверы Night Corp','Хранят отчёты и отправляют обновления. В реальном времени за всем никто не следит.'],
+    ],
+    chainNote:`«Плановая калибровка оптики» на самом деле сеанс обслуживания.`,
+    stagesT:'Четыре стадии',
+    stages:[
+      ['I','Картографирование','Реакции, триггеры, воспоминания и привычки нанесены на карту.','завершено'],
+      ['II','Эмоциональная перенастройка','Насилие перестало приносить удовольствие, чужой страх стал неприятен, близость и сочувствие набрали вес.','закреплено'],
+      ['III','Редактирование биографии','Воспоминания, несовместимые с новым образом, удалены или изменены. Отсюда провалы.','источник провалов'],
+      ['IV','Поддержание','Система следит за отклонениями от профиля и поправляет их малыми медленными дозами.','активна'],
+    ],
+    editsT:'Как правили память',
+    edits:[
+      ['Удаление','Эпизод стёрт целиком.','Пустота там, где должна быть картинка'],
+      ['Подмена контекста','Факт остался, обстоятельства другие.','Безоружная женщина → «опасный противник»'],
+      ['Новый мотив','Сделал, но причина другая.','«Я это делал, но мне не нравилось»'],
+      ['Без эмоций','Помнит, но ничего не чувствует.','Знает, что мать умерла. Пусто'],
+    ],
+    editsNote:'Процедурную память и боевые навыки не трогали. Руки знают то, что голова объяснить не может.',
+    s4:'Сбои',
+    intrLead:'Старые рефлексы срабатывают на мгновение раньше, чем он успевает себя поймать. Это рефлексы, а не голос и не чужая воля. Он каждый раз находит бытовое объяснение: адреналин, травма, оптика троит.',
+    intr:[
+      ['Кто-то его боится','Уголок рта на миг ползёт вверх. Потом холодно и кисло.'],
+      ['Драка','Рука доводит приём жёстче, чем нужно. «Где я этому научился?»'],
+      ['Кровь, запах горелой изоляции, крик','Волна жара и азарта раньше тревоги.'],
+      ['Старое лицо или место из Нортсайда','Знает имя или чёрный ход и не помнит откуда.'],
+      ['Допросная, наручники, беспомощный человек','Самый сильный сбой: тело узнаёт комнату и процедуру. Его тошнит.'],
+      ['Близость','Хватка грубее, чем хотел. «Моя», которое он не собирался говорить.'],
+    ],
+    mirrorCap:'Синхронизация оптики 63%. Ошибка системы.',
+    s5:'Что дальше',
+    axesLead:'Изменения идут по трём независимым осям. Одна не тянет за собой другую.',
+    axes:[
+      ['Память','Возвращаются реальные события. Это не значит, что вернутся прежние желания.'],
+      ['Реакции','Старые удовольствия и ярость снова доступны. Это не значит, что он обязан им подчиниться.'],
+      ['Знание','У него есть доказательства эксперимента. Это не значит, что он сразу поймёт, какой он «настоящий».'],
+    ],
+    fourth:`Четвёртый фактор: всё, что он прожил после. Решения, отношения, сожаления. Это его собственное, что бы ни случилось с остальным. Ни старый, ни новый Десмонд не считается «настоящим», и сколько в его чувствах искусственного, измерить нельзя. Финал не предрешён.`,
+    sealedT:'Запечатано',
+    sealed:`В его оружейной есть пустые крепления и выцветшие контуры на стенах. Есть ночи, которые не помнит никто, кроме свидетелей. Их раскроет игра.`,
+    relock:'Закрыть доступ снова'
+  },
+  lore:{
+    title:'Найт-Сити',
+    lead:'Всё, что нужно знать о мире, чтобы не потеряться в первой же сцене. Канон Cyberpunk 2077 и авторские дополнения помечены.',
+    filter:'Поиск: район, банда, слово…',
+    none:'Ничего не найдено.',
+    groups:[
+      {t:'Город',items:[
+        ['Найт-Сити','canon','Самоуправляемый корпоративный мегаполис на побережье Свободного штата Северная Калифорния, около 7,5 млн человек. Мэр и совет есть, но инфраструктура принадлежит корпорациям, они же платят полиции и политикам. Ниже корпоративной черты правит уличное правосудие. Кислотный дождь, смог, неон круглые сутки.'],
+        ['НСША','canon','Новые Соединённые Штаты: остаток старых США на востоке и в центре континента. Калифорния вне федерального контроля. Президент Майерс, бывший член совета Militech, давит на воссоединение. В Найт-Сити НСША чувствуются в основном через Militech.'],
+        ['Экстерриториальность','canon','Корпорации ведут себя как государства. Территория корпорации — иностранная земля: городской закон заканчивается на пороге. У корпораций свои армии, суды и службы безопасности, своих сотрудников они «полицейят» сами.'],
+        ['Эдди и фиксеры','canon','Евродоллар, «эдди», — основная валюта. Фиксеры держат серый рынок: сводят клиентов с наёмниками, нетраннерами и громилами, назначают цену, у каждого своя территория.'],
+        ['Холокост 2023','canon','20 августа 2023 года ударная группа при поддержке Militech подорвала башню Арасаки тактическим ядерным зарядом. Погибли тысячи. На Корпо-плаза стоит мемориал, новая башня Арасаки выросла на том же месте.'],
+      ]},
+      {t:'Районы',items:[
+        ['Уотсон · Нортсайд','canon','«Плохой район». Нортсайд — промзона: склады, заводы, мёртвые цеха. Территория Мальстрёма, логова мусорщиков. Здесь вырос Десмонд. Рядом Кабуки с рынками дешёвого хрома и Маленький Китай.'],
+        ['Центр · Корпо-плаза','canon','Стеклянные башни, частные КПП, камеры на каждом углу. Штаб-квартиры Night Corp, Militech и Арасаки. Уличной преступности будто нет: корпоративная охрана решает всё тихо и внутри.'],
+        ['Хейвуд','canon','Латиноамериканский район, дом Валентино. Глен — мэрия, офисы и дорогие квартиры, здесь живёт Десмонд. Виста-дель-Рей — беднее и старше, муралы, семьи, которые живут тут поколениями. Корпоративная застройка выдавливает старых жильцов.'],
+        ['Уэстбрук','canon','Сюда приходят тратить деньги. Джапантаун с неоном и клубами, улица Джиг-Джиг под Тигриными когтями, Чартер-Хилл, особняки Норт-Оука.'],
+        ['Санто-Доминго','canon','Один из старейших районов: заводы, электростанции, перенаселённые мегабашни. Корпорации используют его как полигон. Территория Шестой улицы.'],
+        ['Пасифика и Догтаун','canon','Брошенный курорт: недостроенные отели, пустые бассейны. Держат Вудуисты, полиция не патрулирует. Внутри — Догтаун, огороженный анклав под властью ополчения «Баргест».'],
+        ['Пустоши','canon','Сухие равнины за городом: горящие нефтяные поля, заброшенные посёлки, кланы кочевников. Закона нет, кланы следят за собой сами.'],
+      ]},
+      {t:'Night Corp',items:[
+        ['Публичное лицо','canon','Корпорация, построенная на наследии Ричарда Найта, основателя города, убитого в 1998-м. Градостроительство, транспорт, коммуналка, благотворительность. Держит свет и транспорт города и подаёт себя как самую «гражданскую» корпорацию.'],
+        ['Репутация','canon','Тихая, скрытная, подозрительно близка к мэрии. Слухи о людях, которые «сами на себя не похожи», о невидимых исследованиях ИИ, о слишком хорошей слежке. Ни один не подтвердился. Сотрудники говорят о компании с подозрительно ровной лояльностью.'],
+        ['Служба безопасности','author','Тактическое крыло — полевые силовики: извлечения, подавление утечек, грязная работа, группы по 4–6 человек. Внутренняя безопасность расследует своих: утечки, кражи, проверки лояльности, допросы. Следователи работают парами, медицинские файлы закрыты высоким допуском.'],
+        ['Отдел особых мер','author','Подразделение внутренней безопасности для «жёстких допросов». Руководит Юджин Хейл. Комнаты на минус четвёртом этаже башни: привинченные столы, кольца для наручников, слив в полу. Оттуда выходят не все.'],
+        ['Рейд на маглев','canon','В конце 2077 кочевники-Альдекальдо прорвались на стройку маглев-туннеля Night Corp. Периметр держал Militech, среди охраны было несколько полевиков Night Corp. Вражеский нетраннер прошёлся по имплантам охраны. Десмонд был среди раненых.'],
+      ]},
+      {t:'Банды',items:[
+        ['Мальстрём','canon','Банда экстремальной модификации в Нортсайде. Несколько оптик, светодиоды на лице, конечности ради вида. Культ хрома, разрушения и зрелища, страх как валюта. Опорный пункт — заброшенный завод «Олл Фудс».'],
+        ['Мусорщики','canon','Разрозненные ячейки, которые похищают людей и разбирают их на импланты и органы. Ни территории, ни кодекса. Часто жертва в сознании. Некоторые используют приманку: дружелюбное лицо, секс-работницу, фальшивую работу.'],
+        ['Валентино','canon','Крупнейшая банда города, корни в Хейвуде. Золотой хром, католические символы, лоурайдеры, кодекс семьи и уважения. Виста-дель-Рей принадлежит им. Корпоративным значкам там не рады.'],
+        ['Тигриные когти','canon','Японская банда, правит Джапантауном. Быстрые байки, катаны, светящиеся татуировки. Клубы, азарт, секс-индустрия, «кукольные дома», где работниц переписывают чипами.'],
+        ['Мокс','canon','Банда взаимной защиты секс-работниц и их союзников. База — «Бар Лиззи» в Кабуки. Защищают своих от Когтей, Мальстрёма и клиентов, которые считают людей товаром.'],
+        ['Шестая улица','canon','Банда ветеранов в Санто-Доминго. Начиналась как дружина. Флаги, риторика защиты района, военная дисциплина и обычный бандитский бизнес.'],
+        ['Животные','canon','Сила как идентичность. Вместо хрома — стимуляторы, гормоны, пересадка мышц. Нанимаются вышибалами, коллекторами и бойцами.'],
+        ['Вудуисты','canon','Гаитянский коллектив нетраннеров в Пасифике, одни из лучших в городе. Ищут контакт с ИИ за Чёрным заслоном, поэтому в открытой войне с Сетевым дозором.'],
+      ]},
+      {t:'Хром и сеть',items:[
+        ['Хром и рипердоки','canon','Хром — это класс. Тяжёлое видимое железо — улица, армия или отчаяние. Тонкие дорогие импланты — деньги. Рипердоки ставят хром без лицензии, за нал и без вопросов. Корпоративные клиники дороже и отчитываются обо всём.'],
+        ['Kiroshi','canon','Японский производитель и лидер рынка кибер-глаз. На улице «кироши» называют любую оптику. Корпоративная оптика от работодателя идёт с фирменным софтом, обслуживается только в клиниках компании и требует регулярной калибровки.'],
+        ['Берсерк','canon','Боевая операционная система. Заливает тело стимуляторами и выжимает мышцы и броню за пределы нормы. Потом трясёт и опустошает. Любим силовиками и Мальстрёмом. Частое использование связывают с киберпсихозом.'],
+        ['Нетраннинг','canon','Прямое подключение к сети через кибердеку и нейропорт. ICE защищает данные, демоны атакуют, квикхаки бьют в реальном времени: ослепляют оптику, перегревают импланты, жгут нервную систему. Враждебный раннер может выжечь цели интерфейс и глаза издалека.'],
+        ['Брейнданс','canon','Запись полного ощущения: зрение, звук, осязание, эмоции. Легальный BD — огромная индустрия, XBD с насилием запрещён и доступен везде. Сырая, неотредактированная запись ощущается плоской и пересвеченной.'],
+        ['Киберпсихоз','canon','Распад личности из-за избытка или плохой интеграции хрома. Эмпатия и контроль импульсов разрушаются. Не лечится. Активные случаи забирает МаксТак. Хромированного мужика, который странно себя ведёт, сначала подозревают, а потом лечат.'],
+        ['Чёрный заслон','canon','Барьер Сетевого дозора между человеческой сетью и дикими ИИ, которые развились в руинах старой сети после ДатаКраша 2022 года. Что за ним, толком не знает никто.'],
+      ]},
+      {t:'Люди вокруг Десмонда',items:[
+        ['Юджин Хейл','author','Глава отдела особых мер, бывший командир группы, где служил Десмонд. Садист под контролем: холодный, методичный, никогда не повышает голос. Прежнего Десмонда побаивался. Нового подкалывает за «размякание».'],
+        ['Тито Рейес','author','Полевик тактического крыла, годами служил с Десмондом. Ведомый по натуре: прежний Десмонд был его вожаком. До сих пор подкидывает старые реплики и ждёт старых ответов. Золотой клык, жвачный табак, смеётся слишком громко.'],
+        ['Глитч','author','Мальстрёмовец, друг детства Десмонда, насколько в Нортсайде бывают друзья. Стальная челюсть, три красные оптики. Зовёт Десмонда «Рус». Узнаёт его с первого взгляда. Десмонд его не помнит вообще.'],
+        ['Роман Кравец','author','Отец Десмонда, 54. Русский мигрант, до сих пор с мусорщиками, теперь скорее скупщик. Пьёт, громко смеётся, бьёт без предупреждения. Отец и сын не разговаривают годами.'],
+        ['Мама Уэллс · El Coyote Cojo','canon','Бар в Хейвуде, почти нейтральная территория. Мама Уэллс тёплая со своими и беспощадна к тем, кто не уважает её место. С одной ночи 2076 года людей Night Corp на порог не пускает. Почему, не обсуждает.'],
+        ['Мистер Голубые Глаза','canon','Имя, которое ходит среди фиксеров и нетраннеров. Дорогой костюм, глаза со слабым неестественным голубым свечением. Его видят там, где меняется власть. Говорят, через его глаза смотрит кто-то ещё.'],
+      ]},
+    ],
+    slangT:'Сленг',
+    slang:[
+      ['choom','чумба','друг, свой'],['gonk','гонк','идиот'],['preem','прем','высший класс'],['nova','нова','круто'],['delta','дельта','свалить'],
+      ['flatline','флэтлайн','убить, умереть'],['chrome','хром','импланты'],['iron','ствол','оружие'],['ripperdoc','рипердок','хирург по хрому'],
+      ['eddies','эдди','деньги'],['gig','заказ','работа'],['fixer','фиксер','посредник'],['merc','наёмник','наёмник'],['solo','соло','боевик'],
+      ['netrunner','нетраннер','хакер'],['corpo','пиджак','корпоративный'],['fry','поджарить','выжечь взломом'],['jack in','подключиться','войти в сеть'],
+    ]
+  },
+  paths:{
+    title:'Пути',
+    lead:'Три готовые завязки и одна пустая. В каждой ты приходишь к Десмонду со своей стороны, и каждая давит на него по-своему.',
+    code:'ВАРИАНТ',
+    list:[
+      {cls:'p1',icon:'cup',name:'Напарница',hook:'Ночная смена на этаже внутренней безопасности. Он приносит тебе кофе, ровно такой, как ты любишь, и просит пробить его закрытую медкарту.',
+       dl:[['Кто ты','Новая напарница по ночным сменам. С допуском выше, чем у него.'],['Решаешь ты','Ты просто коллега, которой можно доверять, или наблюдатель, которому невыгодно, чтобы он вспомнил.'],['Тон','Медленное напряжение, офисная паранойя, близость под камерами.']],
+       tags:['офис','тайна','slow burn']},
+      {cls:'p2',icon:'cuffs',name:'Задержанная',hook:'Ты взломала закрытый контур Night Corp и попалась. Минус четвёртый этаж, слив в полу. Допрашивает тебя Десмонд, и времени у него до рассвета.',
+       dl:[['Кто ты','Нарушитель, которого взяли на попытке выкачать данные.'],['Решаешь ты','На кого ты работаешь, что искала и знаешь ли ты про эксперимент.'],['Тон','Острый. Допрос для него самое сильное место сбоев. Если имени не будет, придёт Хейл.']],
+       tags:['допрос','опасность','dark']},
+      {cls:'p3',icon:'cap',name:'Сестра',hook:'Ночью в твою дверь в Виста-дель-Рей стучит огромный корпорат. В руке у него синяя кепка твоего брата. Он говорит, что не помнит, откуда она у него.',
+       dl:[['Кто ты','Сестра парня, которого застрелили возле бара в Хейвуде. Дело закрыли как самооборону.'],['Решаешь ты','Что ты знаешь о той ночи и что сделаешь с человеком, который пришёл с кепкой.'],['Тон','Горе, недоверие, расследование. Самый прямой путь к его прошлому.']],
+       tags:['прошлое','расследование','драма']},
+      {cls:'p4',icon:'cursor',name:'Свой путь',hook:'Пустое первое сообщение. Начни сцену сам: где вы встретились и кем ты ему приходишься.',
+       dl:[['Зацепки','Бар, куда не пускают корпоратов. Пустая трасса в три ночи. Нортсайд и старые знакомые. Его пентхаус и оружейная с пустыми креплениями.'],['Совет','Опиши в первом сообщении, кто ты и что видит Десмонд. Остальное лорбук подхватит.']],
+       tags:['свободно']},
+    ],
+    notesT:'Перед игрой',
+    notes:[
+      ['Лорбук','Подключи к карточке лорбук Cyberpunk CN-07. Без него бот не узнает город, людей вокруг Десмонда и то, что от него скрыто.'],
+      ['Тайна раскрывается медленно','Большинство сцен про настоящее: работа, люди, его жизнь. Улики приходят через вещи, чужие слова и его тело. Ищи их сам.'],
+      ['Спойлеры','Раздел «Правда» раскрывает его прошлое и механизм эксперимента. Если хочешь узнать всё в игре, не взламывай досье до старта.'],
+    ]
+  }
+},
+en:{
+  nav:{home:'Home',dossier:'File',lore:'Lore',paths:'Paths',truth:'Truth',locked:'████'},
+  tick:['Night Corp · internal security','Kiroshi v4.2.7 · sync 87%','Subject NC-IS-0736 · status: stable','NCPD · case closed at third-party request','City Center · acid rain · visibility 400 m','Maglev tunnel · construction resumed','Routine optic calibration · 06:00','CN-07 · ████████'],
+  foot:`<p>A fan project set in the Cyberpunk 2077 universe. Night City, Night Corp, Kiroshi and other setting names belong to CD PROJEKT RED. The character, original lore and artwork belong to the bot's author.</p><p class="mono" style="font-size:11.5px">NC·IS // INTERNAL USE ONLY</p>`,
+  home:{
+    meta:['Cyberpunk 2077','Night City','early 2078'],
+    tag:`Night Corp put him back together. He's grateful. <em>He doesn't remember what for.</em>`,
+    pitch:`Desmond is a six-foot-five, heavily chromed Night Corp enforcer. In late 2077 a hostile netrunner nearly burned his brain out, and the company paid for months of rehab, new optics and a quiet desk in Internal Security. Now he is a restrained, protective, rough-edged guy who brings his partner coffee and gets angry when someone is cornered. Coworkers say, "Des, I barely recognize you." He says, "They fried my brain, what'd you expect."`,
+    pitch2:`A text roleplay bot: a character card, a Night City lorebook and a mystery the player uncovers on their own.`,
+    cap:'North face of the Night Corp tower, 02:40',
+    secs:'Sections',
+    tiles:[
+      ['dossier','File','His official personnel file. A glowing review and a lot of black bars.'],
+      ['lore','Lore','Night City for anyone who hasn\'t played or has forgotten: districts, gangs, corps, slang.'],
+      ['paths','Paths','Three openings and one blank. Who you are when you meet Desmond.'],
+    ],
+    lockT:['████','Access denied. Breach the file to open this section.'],
+    openT:['Truth','Declassified: who he was and what was done to him.'],
+    warnT:'Before you play',
+    warn:'Adults only. The story contains:',
+    warnList:['violence and torture','murder','the hero\'s sadistic past','non-consensual personality modification','explicit scenes, dominance','strong language'],
+    whereT:'Where to play',
+    where:`The card is made for SillyTavern and similar frontends. Attach the <span class="mono">Cyberpunk CN-07</span> lorebook along with it: it holds the city, the people around Desmond and everything kept from him.`,
+    whereLink:'The card link will appear here'
+  },
+  dossier:{
+    title:'Personnel File',
+    head:'NIGHT CORP · INTERNAL SECURITY · PERSONNEL FILE',
+    stamp:'Reinstated',
+    photoCap:'ID photo, updated after rehabilitation',
+    f:[
+      ['Name','Desmond Kravets'],
+      ['Employee ID','NC-IS-0736'],
+      ['Department','Internal Security, night shift'],
+      ['Position','Investigator'],
+      ['Clearance','2'],
+      ['Age','36'],
+      ['Height / weight','196 cm / 130+ kg'],
+      ['Previous assignment',()=>`Tactical wing, team ${R(6)}`],
+      ['Origin','Northside, Watson'],
+      ['Residence','The Glen, Heywood. Two-level penthouse'],
+    ],
+    lookT:'Appearance',
+    look:`Massive and heavy: a strongman's frame, not sculpted muscle. His neck is almost as wide as his head, and he turns slightly sideways to get through doorways. Ash-blond buzz cut, constant stubble, grey-green eyes. A heavy Slavic face from his father, a nose broken at least twice. A diagonal scar across cheek and nose, a thin angular surgical seam at his left temple, a barcode tattoo on his neck. He moves heavier than he looks and faster than anyone expects.`,
+    medT:'Medical summary',
+    med:[
+      ['Injury','Neuro-cybernetic burn. Hostile netrunner attack during the nomad raid on the maglev tunnel site, late 2077. Optics and neural interface burned out.'],
+      ['Rehabilitation',()=>`${R(3)} months, company clinic. New optics installed.`],
+      ['Follow-up','Routine optic calibration. Headaches and harsh light for a few hours afterwards are normal.'],
+      ['Side effects',()=>`Partial memory gaps (expected after the burn). ${R(14,1)}`],
+      ['Medical record',()=>`${R(18)} <span class="tag red">clearance 4</span>`],
+    ],
+    chromeT:'Cyberware',
+    chrome:[
+      ['Gorilla Arms','From mid-forearm down: a heavy gunmetal frame of plates and struts, fully mechanical hands. Cold to the touch.'],
+      ['Subdermal armor','Chest and neck. Reinforced tendons and ankles.'],
+      ['Kiroshi optics','Corporate-grade, new. Installed during rehab, iris tuned to his natural grey-green.'],
+      ['Neural interface',()=>`Ports at the base of the skull. Fresh scars at the temples and nape. ${R(10,2)}`],
+      ['Berserk OS','Installed. The employee almost never activates it.'],
+    ],
+    evalT:'Supervisor\'s evaluation',
+    eval:[
+      ['Self-control',4,'Quick-tempered but manages it. Defuses conflict with a pause: lowers his voice, leaves the room. No incidents on record apart from one damaged locker.'],
+      ['Protecting staff',5,'Steps into other people\'s conflicts even when it\'s none of his business. Overprotective: coworkers complain he makes them eat.'],
+      ['Crisis response',5,'Under fire, the calmest person in the room: short commands, clear priorities. Off duty, prone to reckless driving.'],
+      ['Working with people',4,()=>`Observant, reads lies well. Tells the guilty from the merely scared. No complaints from detainees. ${R(12,3)}`],
+      ['Loyalty to the company',5,'High. Openly grateful to the company for his treatment. Reacts sharply to "corpo dog" jokes.'],
+    ],
+    prevT:'Service history',
+    prev:[
+      ['before 2071',()=>`Fixer contracts, private security. ${R(16)}`],
+      ['2071–2077',()=>`Tactical wing. Extractions, site protection, ${R(20,4)}`],
+      ['late 2077','Severely injured at the maglev tunnel site.'],
+      ['2078','Transferred to Internal Security.'],
+      ['Pre-injury profile',()=>`${R(22,5)}`],
+    ],
+    persT:'Personal',
+    pers:()=>`A bike, a fast car and an empty highway at night. The gym. Strong black coffee, cheap street food, loud music in the car. Smokes, less than before. Dislikes corporate double-talk, bullies, pity, med-bays and sitting still. Next of kin: father, Roman Kravets (no contact). Mother deceased. ${R(8,6)}`,
+    quotesT:'From conversation logs',
+    quotes:[['Breathe. You\'re good. I got it.','night shift, floor 41'],['Eat something, you look like shit.','break room'],['Huh. Don\'t remember that.','elevator lobby']],
+    stripT:'Surveillance material',
+    strip:[['car','Personal vehicle, City Center'],['standing','Off duty'],['mirror','Bathroom, 06:12. Optic sync 87%']],
+    breachT:'Full file access',
+    breachSub:'Part of this record is sealed at clearance 4. You have clearance 2.',
+    breachBtn:'Declassify',
+    prompt:'Enter access key',
+    go:'Enter',
+    found:'Key fragments found',
+    deny:n=>`DENIED. Wrong key. Attempt ${n}.`,
+    hint:'SYSTEM: the key is under the black bars in this file. Hover over them or tap them.',
+    steps:['bypassing level 4 ICE…','hijacking session…','lifting redactions…','ACCESS GRANTED'],
+    ph:'______'
+  },
+  cap:{t:'Unlisted item',p:'A blue baseball cap. A torn hole above the brim, edges pushed outward. Not on any evidence inventory.',r:'The key is what he looks into every morning.',c:'Put it back'},
+  truth:{
+    readout:[['SUBJECT','Desmond, NC-IS-0736'],['PROTOCOL','CN-07 / Carpe Noctem'],['STAGE','IV, maintenance'],['AWARE','no']],
+    h1:'They didn\'t fix him. They rewrote him.',
+    lead:`While Desmond lay in a company med-bay after the maglev raid, Night Corp ran a personality-modification experiment on him without his knowledge or consent. He doesn't know. His new self is real to him: not a mask and not a second voice in his head. He sincerely is who he is now. He just didn't get there on his own.`,
+    s1:'Who he was',
+    origin:`<p>He grew up in Northside, Watson's industrial zone, on the edge of Maelstrom turf. His father, a Russian immigrant, hit him whenever his mood turned, not for anything in particular. His mother treated him more like a drinking buddy than a son and helped a Scavenger crew lure people in to be stripped for chrome and organs. Bodies as parts, pain as overhead: he heard that language from childhood.</p>
+<p>As a teen he ran errands for Maelstrom. He never became a full member. He wanted to be someone even Maelstrom was afraid of.</p>
+<p><strong>The fork.</strong> At nineteen, a year after his mother died, he had a real way out: old Marco, who ran a bike garage in Watson, took him on as an apprentice with a steady wage and talk of a trade course. Desmond worked there a few months and turned out to be good with engines. Then he walked away to take fixer gigs. The street paid more and let him hurt people. No one forced him.</p>
+<p>Then private security, and Night Corp's field team under Hale. Extractions, intimidation, interrogations. In interrogation he didn't care about the information. He cared about the hours before it. Old teammates still talk fondly about "the basement in Northside" and "the Biotechnica woman."</p>`,
+    traitsT:'Six traits of the old Desmond',
+    traits:[
+      ['Explosive','Pressure turned into violence fast, and five minutes later he was laughing as if nothing happened.'],
+      ['Sadist','He enjoyed pain and fear. It mattered that the victim knew who owned their body.'],
+      ['Thrill of chaos','Firefights, chases and fire made him laugh. Boredom was dangerous: bored, he made trouble himself.'],
+      ['Power on display','Feet on the desk, a cigarette in someone else\'s office, public humiliation. Power had to be seen.'],
+      ['Reading people','He caught fear, lies and weakness instantly, and almost always read nervousness as weakness to exploit.'],
+      ['Chained dog','He served whoever paid for his chrome and licensed his violence, and looked down on everyone below him.'],
+    ],
+    s2:'Before and after',
+    baBefore:'Before',baAfter:'After',
+    ba:[
+      ['Someone\'s fear','Pleasure. He pressed harder.','Unease and a wish to help. He sits down, lowers his voice, steps back.'],
+      ['Irritation','Straight to action: shouting, a punch, things thrown.','A pause. "Give me a minute." The gym or an empty highway.'],
+      ['Chaos and danger','Euphoria. He laughed and escalated.','Still comes alive, but focuses and gets people out.'],
+      ['Interrogation','His favorite part of the job. The hours before the answer.','Nausea. His body recognizes the room and the tools.'],
+      ['Intimacy','Paid sex, no attachment. Gone right after.','It matters who. He stays, though something pulls him to leave.'],
+      ['Night Corp','A master that let him be a monster.','The company that saved his life. He owes them.'],
+    ],
+    s3:'What was done to him',
+    hkT:'The mirror test',
+    hk:`<p><span class="tag canon">canon</span> Among the data stolen by Sandra Dorsett is an internal Night Corp report on Operation Carpe Noctem. An AI called CN-07 learned to bypass the security on low-level employees' devices. The subjects never knew they were being tested. Subject HK-13, classified at the start as "calm and empathetic," became psychopathic after covert conditioning: he strangled a colleague over a dispute about coffee and jumped from a sixteenth-floor window.</p>
+<p><span class="tag author">author's lore</span> Desmond is the mirror image of that test. HK-13 was turned from empathetic to psychopathic. Desmond the sadist was taken the other way, and "calm and empathetic" is literally his target profile. Only a small research group and whoever signed off at the top know. Internal Security, Hale and Reyes do not.</p>`,
+    chainT:'How it works',
+    chain:[
+      ['Kiroshi optics','Hidden firmware. Sensor and channel: faces, reactions, surroundings and his own behavior.'],
+      ['Neural interface','Applies local corrections to emotional and behavioral responses.'],
+      ['CN-07','Compares what it sees with the target profile and decides whether to hold course or adjust.'],
+      ['Night Corp servers','Store the reports and push updates. No one watches everything in real time.'],
+    ],
+    chainNote:`The "routine optic calibrations" are maintenance sessions.`,
+    stagesT:'Four stages',
+    stages:[
+      ['I','Mapping','His reactions, triggers, memories and habits were charted.','complete'],
+      ['II','Emotional retuning','Violence stopped being rewarding, other people\'s fear became unpleasant, connection and empathy gained weight.','fixed'],
+      ['III','Autobiographical editing','Memories incompatible with the new self were removed or altered. The source of his gaps.','source of gaps'],
+      ['IV','Maintenance','The system watches for drift from the profile and corrects it in small, slow doses.','active'],
+    ],
+    editsT:'How his memory was edited',
+    edits:[
+      ['Deleted','The episode is gone entirely.','White noise where a picture should be'],
+      ['Context swapped','The fact stays, the circumstances change.','Unarmed woman → "dangerous hostile"'],
+      ['Motive rewritten','He did it, but for another reason.','"I did it, but I never enjoyed it"'],
+      ['Emotion stripped','He remembers, but feels nothing.','Knows his mother died. Nothing'],
+    ],
+    editsNote:'Procedural memory and combat skills were left alone. His hands know things his mind can\'t explain.',
+    s4:'Glitches',
+    intrLead:'Old reflexes fire a moment before he can catch himself. They are reflexes, not a voice and not someone else\'s will. Every time, he finds an ordinary explanation: adrenaline, the injury, glitchy optics.',
+    intr:[
+      ['Someone is afraid of him','The corner of his mouth lifts for an instant. Then a cold, sour feeling.'],
+      ['A fight','His hand finishes a move harder than needed. "Where\'d I learn that?"'],
+      ['Blood, burning insulation, a scream','A rush of heat and excitement before the alarm.'],
+      ['An old Northside face or place','He knows a name or a back door and can\'t say how.'],
+      ['Interrogation room, restraints, a helpless person','The strongest glitch: his body knows the room and the procedure. He gets sick.'],
+      ['Intimacy','A grip rougher than he meant. A "mine" he didn\'t plan to say.'],
+    ],
+    mirrorCap:'Optic sync 63%. System error.',
+    s5:'What comes next',
+    axesLead:'Change runs along three independent axes. One doesn\'t drag the others with it.',
+    axes:[
+      ['Memory','Real events come back. That doesn\'t mean his old wants come back.'],
+      ['Reactions','The old pleasures and rage become available again. That doesn\'t mean he has to obey them.'],
+      ['Knowledge','He has proof of the experiment. That doesn\'t mean he knows which self is the "real" one.'],
+    ],
+    fourth:`A fourth factor: everything he has lived through since. Choices, relationships, regret. That is his own, whatever happens to the rest. Neither the old nor the new Desmond counts as the "true" one, and how much of any feeling is artificial can't be measured. The ending isn't written.`,
+    sealedT:'Sealed',
+    sealed:`His armory has empty mounts and faded outlines on the walls. There are nights no one remembers except the witnesses. The game will open those.`,
+    relock:'Lock access again'
+  },
+  lore:{
+    title:'Night City',
+    lead:'Everything you need about the world to keep your footing in the first scene. Cyberpunk 2077 canon and the author\'s additions are marked.',
+    filter:'Search: district, gang, word…',
+    none:'Nothing found.',
+    groups:[
+      {t:'The city',items:[
+        ['Night City','canon','A self-governing corporate metropolis on the coast of the Free State of Northern California, about 7.5 million people. There is a mayor and a council, but the corps own the infrastructure and pay the police and the politicians. Below the corporate line, street justice rules. Acid rain, smog, neon around the clock.'],
+        ['NUSA','canon','The New United States: what is left of the old USA in the east and center of the continent. California is outside federal control. President Myers, a former Militech board member, pushes reunification. In Night City, NUSA is felt mostly through Militech.'],
+        ['Extraterritoriality','canon','Megacorps act like states. Corporate property counts as foreign soil: city law stops at the door. Corps have their own armies, courts and security services, and police their own employees.'],
+        ['Eddies & fixers','canon','The eurodollar, or "eddie," is the main currency. Fixers run the gray market: they connect clients with mercs, netrunners and muscle, set the price, and each controls a territory.'],
+        ['The 2023 Holocaust','canon','On August 20, 2023, a Militech-backed strike team hit Arasaka Tower with a tactical nuke. Thousands died. A memorial stands at Corpo Plaza, and the new Arasaka Tower rises on the same ground.'],
+      ]},
+      {t:'Districts',items:[
+        ['Watson · Northside','canon','"The bad part of town." Northside is the industrial zone: warehouses, factories, dead plants. Maelstrom turf and Scavenger dens. Desmond grew up here. Next door: Kabuki\'s cheap-chrome markets and Little China.'],
+        ['City Center · Corpo Plaza','canon','Glass towers, private checkpoints, cameras on every corner. Headquarters of Night Corp, Militech and Arasaka. Street crime seems to be near zero: corporate security handles everything quietly, in-house.'],
+        ['Heywood','canon','The Latino district, home of the Valentinos. The Glen has city hall, offices and expensive apartments; Desmond lives here. Vista del Rey is poorer and older, with murals and families who have lived there for generations. Corporate redevelopment is pushing old residents out.'],
+        ['Westbrook','canon','Where money comes to have fun. Japantown\'s neon and clubs, Jig-Jig Street under the Tyger Claws, Charter Hill, the mansions of North Oak.'],
+        ['Santo Domingo','canon','One of the oldest districts: factories, power plants, crowded megabuildings. The corps treat it as a testing ground. 6th Street turf.'],
+        ['Pacifica & Dogtown','canon','A failed resort: half-built hotels, dry pools. The Voodoo Boys hold it and the police don\'t patrol. Inside lies Dogtown, a walled enclave run by the Barghest militia.'],
+        ['The Badlands','canon','Dry plains outside the city: burning oil fields, abandoned towns, nomad clans. No law; the clans police themselves.'],
+      ]},
+      {t:'Night Corp',items:[
+        ['Public face','canon','A corporation built on the legacy of Richard Night, the city\'s founder, murdered in 1998. Urban development, transit, utilities, philanthropy. It keeps the city\'s lights and trains running and presents itself as the most civic-minded corp in town.'],
+        ['Reputation','canon','Quiet, secretive, suspiciously close to City Hall. Rumors of people who "aren\'t themselves anymore," of AI research no one can see, of surveillance that is too good. Nothing has ever stuck. Employees speak of the company with a loyalty that seems a little too even.'],
+        ['Corporate security','author','The tactical wing is the field force: extractions, leak suppression, dirty work, squads of four to six. Internal Security investigates the company\'s own people: leaks, theft, loyalty checks, interrogations. Investigators work in pairs, and medical files sit behind high clearance.'],
+        ['Special Measures','author','The section of Internal Security for "hard interrogations," run by Eugene Hale. Its rooms are on sub-level 4 of the tower: bolted tables, restraint rings, a floor drain. Not everyone walks out.'],
+        ['The maglev raid','canon','In late 2077 Aldecaldo nomads broke into Night Corp\'s maglev tunnel construction site. Militech held the perimeter, with a few Night Corp field men among the guards. A hostile netrunner tore through the guards\' implants. Desmond was among the wounded.'],
+      ]},
+      {t:'Gangs',items:[
+        ['Maelstrom','canon','An extreme body-mod gang in Northside. Multiple optics, LED-studded faces, limbs replaced for looks. They worship chrome, destruction and spectacle, and treat fear as currency. Stronghold: the abandoned All Foods plant.'],
+        ['Scavengers','canon','Loose cells that kidnap people and strip them for cyberware and organs. No territory, no code. Victims are often conscious. Some use lures: a friendly face, a sex worker, a fake job.'],
+        ['Valentinos','canon','The city\'s largest gang, rooted in Heywood. Gold chrome, Catholic iconography, lowriders, a code of family and respect. Vista del Rey is theirs. Corporate badges are not welcome.'],
+        ['Tyger Claws','canon','Japanese gang ruling Japantown. Fast bikes, katanas, glowing tattoos. Clubs, gambling, the sex trade, and dollhouses where workers are overwritten by chips.'],
+        ['The Mox','canon','A mutual-defense gang of sex workers and their allies, based at Lizzie\'s Bar in Kabuki. They protect their people from the Claws, Maelstrom and clients who treat people as product.'],
+        ['6th Street','canon','A veterans\' gang in Santo Domingo that started as a neighborhood watch. Flags, protect-the-community talk, military discipline and ordinary gang business.'],
+        ['Animals','canon','Strength as identity. Stims, hormones and muscle grafts instead of chrome. They hire out as bouncers, debt collectors and pit fighters.'],
+        ['Voodoo Boys','canon','A Haitian netrunner collective in Pacifica, among the best runners in the city. They seek contact with the AIs beyond the Blackwall, which puts them at war with NetWatch.'],
+      ]},
+      {t:'Chrome & the Net',items:[
+        ['Chrome & ripperdocs','canon','Chrome is class. Heavy visible hardware means street, military or desperate. Subtle expensive implants mean money. Ripperdocs install chrome unlicensed, cash only, no questions. Corporate clinics cost more and report everything.'],
+        ['Kiroshi','canon','Japanese maker and market leader in cybernetic eyes. On the street, "kiroshi" means any optic. Corporate optics issued by an employer run company software, are serviced only at company clinics and need regular calibration.'],
+        ['Berserk','canon','A combat operating system. Floods the body with stimulants and pushes muscle and armor past normal limits. Leaves you shaking and drained. Popular with enforcers and Maelstrom. Heavy use is linked to cyberpsychosis.'],
+        ['Netrunning','canon','Jacking straight into a network through a cyberdeck and neural port. ICE guards data, daemons attack, quickhacks hit in real time: blinding optics, overheating implants, frying nervous systems. A hostile runner can burn out a target\'s interface and eyes from a distance.'],
+        ['Braindance','canon','A recording of a full experience: sight, sound, touch, emotion. Legal BD is a huge industry; XBDs with real violence are illegal and everywhere. A raw, unedited recording feels flat and overexposed.'],
+        ['Cyberpsychosis','canon','A breakdown from too much or badly integrated chrome. Empathy and impulse control erode. There is no cure. Active cases get MaxTac. A chromed man who acts strangely is a suspect before he is a patient.'],
+        ['The Blackwall','canon','NetWatch\'s barrier between the human Net and the rogue AIs that grew in the ruins of the old Net after the 2022 DataKrash. No one really knows what is on the other side.'],
+      ]},
+      {t:'People around Desmond',items:[
+        ['Eugene Hale','author','Head of Special Measures, formerly team leader of the squad Desmond served in. A sadist under control: cold, methodical, never raises his voice. He was wary of the old Desmond. He needles the new one for "going soft."'],
+        ['Tito Reyes','author','Tactical wing operative who served with Desmond for years. A follower by nature: the old Desmond was his alpha. He still feeds Desmond the old lines and waits for the old answers. Gold chrome canine, chewing tobacco, laughs too loud.'],
+        ['Glitch','author','A Maelstrom ganger, Desmond\'s childhood friend, as far as Northside allows friends. Steel jaw, three red optics. Calls Desmond "Rus." Recognizes him on sight. Desmond doesn\'t remember him at all.'],
+        ['Roman Kravets','author','Desmond\'s father, 54. A Russian immigrant still running with Scavengers, now more of a fence. Drinks, laughs loud, hits without warning. Father and son haven\'t spoken in years.'],
+        ['Mama Welles · El Coyote Cojo','canon','A bar in Heywood, near-neutral ground. Mama Welles is warm with her own and merciless to anyone who disrespects her place. Since one night in 2076, no one from Night Corp gets through her door. She won\'t say why.'],
+        ['Mr. Blue Eyes','canon','A name that circulates among fixers and netrunners. Expensive suit, eyes with a faint, unnatural blue glow. He turns up wherever power changes hands. They say someone else looks out through his eyes.'],
+      ]},
+    ],
+    slangT:'Slang',
+    slang:[
+      ['choom','','friend'],['gonk','','idiot'],['preem','','top quality'],['nova','','cool'],['delta','','leave, get out'],
+      ['flatline','','kill, die'],['chrome','','cyberware'],['iron','','gun'],['ripperdoc','','chrome surgeon'],
+      ['eddies','','money'],['gig','','job'],['fixer','','broker of jobs'],['merc','','mercenary'],['solo','','combat specialist'],
+      ['netrunner','','hacker'],['corpo','','corporate person'],['fry','','burn out by hacking'],['jack in','','connect to the Net'],
+    ]
+  },
+  paths:{
+    title:'Paths',
+    lead:'Three ready-made openings and one blank. In each you come to Desmond from a different side, and each presses on him in its own way.',
+    code:'PATH',
+    list:[
+      {cls:'p1',icon:'cup',name:'Partner',hook:'Night shift on the Internal Security floor. He brings you coffee exactly the way you like it and asks you to pull his sealed medical file.',
+       dl:[['Who you are','His new night-shift partner, with higher clearance than his.'],['Your call','Just a coworker he can trust, or an observer who needs him never to remember.'],['Tone','Slow tension, office paranoia, closeness under cameras.']],
+       tags:['office','mystery','slow burn']},
+      {cls:'p2',icon:'cuffs',name:'Detainee',hook:'You breached a closed Night Corp network and got caught. Sub-level 4, a drain in the floor. Desmond is interrogating you, and he has until dawn.',
+       dl:[['Who you are','An intruder caught trying to pull data.'],['Your call','Who you work for, what you were after, and whether you know about the experiment.'],['Tone','Sharp. Interrogation is where his glitches hit hardest. If he gets no name, Hale comes in.']],
+       tags:['interrogation','danger','dark']},
+      {cls:'p3',icon:'cap',name:'Sister',hook:'Late at night a huge corpo knocks on your door in Vista del Rey. He is holding your brother\'s blue cap. He says he doesn\'t remember how he got it.',
+       dl:[['Who you are','Sister of a kid shot near a bar in Heywood. The case was closed as self-defense.'],['Your call','What you know about that night, and what you do with the man holding the cap.'],['Tone','Grief, distrust, investigation. The most direct road to his past.']],
+       tags:['past','investigation','drama']},
+      {cls:'p4',icon:'cursor',name:'Your own',hook:'A blank first message. Start the scene yourself: where you met and who you are to him.',
+       dl:[['Hooks','A bar that won\'t let corpos in. An empty highway at 3 a.m. Northside and old faces. His penthouse and an armory with empty mounts.'],['Tip','Say in your first message who you are and what Desmond sees. The lorebook handles the rest.']],
+       tags:['open']},
+    ],
+    notesT:'Before you play',
+    notes:[
+      ['Lorebook','Attach the Cyberpunk CN-07 lorebook to the card. Without it the bot won\'t know the city, the people around Desmond or what is hidden from him.'],
+      ['A slow mystery','Most scenes are about the present: work, people, his life. Clues come through objects, other people\'s words and his body. Find them yourself.'],
+      ['Spoilers','The Truth section reveals his past and how the experiment works. If you want to learn it all in play, don\'t breach the file before you start.'],
+    ]
+  }
+}};
+
+const val = v => typeof v === 'function' ? v() : v;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------- pages ---------- */
+function home(){
+  const t = T[lang].home;
+  const lockTile = unlocked
+    ? `<a class="cut tile sysTile" href="#truth"><span class="num">04</span><h3>${T[lang].home.openT[0]}</h3><p>${t.openT[1]}</p></a>`
+    : `<a class="cut tile lockedTile" href="#breach"><span class="num">04</span><h3>${t.lockT[0]}</h3><p>${t.lockT[1]}</p></a>`;
+  return `
+  <section class="hero fade">
+    <div class="text">
+      <div class="metaRow">${t.meta.map(m=>`<span class="tag">${m}</span>`).join('')}</div>
+      <h1><span class="glitch" data-text="Desmond">Desmond</span></h1>
+      <p class="tagline">${t.tag}</p>
+      <div class="prose"><p>${t.pitch}</p><p style="color:var(--mute)">${t.pitch2}</p></div>
+    </div>
+    <figure class="hud redf"><span class="scan"></span><img src="img/standing.webp" alt="${lang==='ru'?'Десмонд в полный рост под дождём у башни Night Corp':'Desmond standing in the rain outside the Night Corp tower'}"><figcaption>${t.cap}</figcaption></figure>
+  </section>
+  <section>
+    <div class="sechead"><h2>${t.secs}</h2></div>
+    <div class="tiles">
+      ${t.tiles.map((x,i)=>`<a class="cut tile" href="#${x[0]}"><span class="num">0${i+1}</span><h3>${x[1]}</h3><p>${x[2]}</p></a>`).join('')}
+      ${lockTile}
+    </div>
+  </section>
+  <section class="two">
+    <div class="cut warn"><div class="hz"></div>
+      <div class="row"><span class="age">18+</span><span class="label" style="color:var(--ink)">${t.warnT}</span></div>
+      <p>${t.warn}</p>
+      <ul>${t.warnList.map(w=>`<li>${w}</li>`).join('')}</ul>
+    </div>
+    <div class="cut blk" style="display:grid;gap:14px;align-content:start">
+      <span class="label">${t.whereT}</span>
+      <p>${t.where}</p>
+      <p class="mono" style="font-size:13px;color:var(--faint);border:1px dashed var(--line);padding:10px 12px">${t.whereLink}</p>
+    </div>
+  </section>`;
+}
+
+function dossier(){
+  const t = T[lang].dossier;
+  const score = n => `<div class="score" aria-label="${n}/5">${[1,2,3,4,5].map(i=>`<i class="${i<=n?'on':''}"></i>`).join('')}</div>`;
+  const rows = arr => `<div class="tblwrap"><table class="spec"><tbody>${arr.map(r=>`<tr><th scope="row">${r[0]}</th><td>${val(r[1])}</td></tr>`).join('')}</tbody></table></div>`;
+  const found = [1,2,3,4,5,6].map(i=>`<span class="${seen.has(String(i))?'on':''}">${seen.has(String(i))?KEY[i-1]:'·'}</span>`).join('');
+  return `
+  <section class="fade">
+    <div class="cut file">
+      <div class="fileHead"><span class="label">${t.head}</span><span class="stamp">${t.stamp}</span></div>
+      <div class="fileBody">
+        <div class="photo">
+          <div class="hud"><img src="img/portrait.webp" alt="${lang==='ru'?'Портрет Десмонда':'Portrait of Desmond'}"></div>
+          <span class="label" style="text-transform:none;letter-spacing:.04em">${t.photoCap}</span>
+        </div>
+        <div class="fields">
+          ${t.f.map((r,i)=>`<div class="field${i===t.f.length-1?' wide':''}"><span class="label">${r[0]}</span><span class="v">${val(r[1])}${i===t.f.length-1?`<button type="button" class="cap-egg" id="cap-egg" aria-label="${lang==='ru'?'Что-то лежит за стойкой':'Something behind the rack'}">${capSmall}</button>`:''}</span></div>`).join('')}
+          <div class="field wide"><span class="label">${t.lookT}</span><p class="v" style="color:#c9ced7;font-size:15px;max-width:70ch">${t.look}</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="grid2">
+      <div class="cut blk"><div class="sechead" style="margin-bottom:8px"><h2 style="font-size:18px">${t.medT}</h2></div>${rows(t.med)}</div>
+      <div class="cut blk"><div class="sechead" style="margin-bottom:8px"><h2 style="font-size:18px">${t.chromeT}</h2></div>${rows(t.chrome)}</div>
+    </div>
+  </section>
+  <section>
+    <div class="sechead"><h2>${t.evalT}</h2></div>
+    <div class="eval">${t.eval.map(e=>`<div class="item"><div><h3>${e[0]}</h3>${score(e[1])}</div><p>${val(e[2])}</p></div>`).join('')}</div>
+  </section>
+  <section class="grid2">
+    <div class="cut blk"><div class="sechead" style="margin-bottom:8px"><h2 style="font-size:18px">${t.prevT}</h2></div>${rows(t.prev)}</div>
+    <div style="display:grid;gap:20px;align-content:start">
+      <div class="cut blk"><div class="sechead" style="margin-bottom:12px"><h2 style="font-size:18px">${t.persT}</h2></div><p style="color:#c9ced7">${val(t.pers)}</p></div>
+      <div class="cut blk"><div class="sechead" style="margin-bottom:12px"><h2 style="font-size:18px">${t.quotesT}</h2></div>
+        <div class="quotes">${t.quotes.map(q=>`<blockquote>«${q[0]}»<cite>${q[1]}</cite></blockquote>`).join('').replace(/«/g, lang==='ru'?'«':'“').replace(/»/g, lang==='ru'?'»':'”')}</div></div>
+    </div>
+  </section>
+  <section>
+    <div class="sechead"><h2>${t.stripT}</h2></div>
+    <div class="strip">${t.strip.map(s=>`<figure><div class="hud"><img src="img/${s[0]}.webp" alt="${esc(s[1])}" loading="lazy"></div><figcaption>${s[1]}</figcaption></figure>`).join('')}</div>
+  </section>
+  <section id="breach">
+    <div class="cut breach">
+      <div class="bhead"><span class="label" style="color:var(--red)">${lang==='ru'?'Уровень 4':'Clearance 4'}</span><h2>${t.breachT}</h2><p style="color:var(--mute)">${t.breachSub}</p></div>
+      ${unlocked ? `<a class="gl sysgo" href="#truth"><span>${T[lang].nav.truth} →</span></a>` : `
+      <button type="button" class="gl" id="gl-btn"><span>${t.breachBtn}</span></button>
+      <div class="term" id="term" hidden>
+        <div class="found" aria-label="${t.found}">${found}</div>
+        <span class="label">${t.found}: ${seen.size}/6</span>
+        <form id="breach-form" autocomplete="off">
+          <label class="pr" for="key-in">&gt;</label>
+          <input id="key-in" name="key" placeholder="${t.ph}" aria-label="${t.prompt}" maxlength="12" spellcheck="false">
+          <button type="submit">${t.go}</button>
+        </form>
+        <div class="out" id="out" aria-live="polite"><span>${t.prompt}</span></div>
+      </div>`}
+    </div>
+  </section>`;
+}
+
+function truth(){
+  const t = T[lang].truth;
+  return `
+  <section class="sysHead fade">
+    <div style="display:grid;gap:22px;min-width:0">
+      <div class="readout">${t.readout.map((r,i)=>`<span>${r[0]} :: <b class="${i===3?'redv':''}">${r[1]}</b></span>`).join('')}</div>
+      <h1><span class="glitch" data-text="${esc(t.h1)}">${t.h1}</span></h1>
+      <p class="lead">${t.lead}</p>
+    </div>
+    <figure class="hud ice"><span class="scan"></span><img src="img/medbay.webp" alt="${lang==='ru'?'Десмонд в медотсеке Night Corp, на мониторе протокол перезаписи':'Desmond in a Night Corp med-bay, a rewrite protocol on the monitor'}"></figure>
+  </section>
+  <section>
+    <div class="sechead"><h2>${t.s1}</h2><span class="tag author">${lang==='ru'?'авторский лор':'author\'s lore'}</span></div>
+    <div class="two" style="align-items:start">
+      <div class="prose">${t.origin}</div>
+      <div class="pair">
+        <div class="hud redf"><img src="img/fight.webp" alt="${lang==='ru'?'Прежний Десмонд смеётся в бою':'The old Desmond laughing mid-fight'}" loading="lazy"></div>
+        <div class="hud redf"><img src="img/fire.webp" alt="${lang==='ru'?'Прежний Десмонд среди огня и тел':'The old Desmond amid fire and bodies'}" loading="lazy"></div>
+      </div>
+    </div>
+    <h3 class="label" style="margin:36px 0 14px">${t.traitsT}</h3>
+    <div class="traits">${t.traits.map(x=>`<div class="cut"><h3>${x[0]}</h3><p>${x[1]}</p></div>`).join('')}</div>
+  </section>
+  <section>
+    <div class="sechead"><h2>${t.s2}</h2></div>
+    <div class="seg" role="group" aria-label="${t.s2}">
+      <button type="button" class="b" id="ba-before" aria-pressed="${baMode==='before'}">${t.baBefore}</button>
+      <button type="button" class="a" id="ba-after" aria-pressed="${baMode==='after'}">${t.baAfter}</button>
+    </div>
+    <div class="cut ba ${baMode}" id="ba">${t.ba.map(r=>`<div class="r"><h3>${r[0]}</h3><p data-b="${esc(r[1])}" data-a="${esc(r[2])}">${baMode==='before'?r[1]:r[2]}</p></div>`).join('')}</div>
+  </section>
+  <section>
+    <div class="sechead"><h2>${t.s3}</h2></div>
+    <div class="prose" style="margin-bottom:36px"><h3 class="label">${t.hkT}</h3>${t.hk}</div>
+    <h3 class="label" style="margin-bottom:14px">${t.chainT}</h3>
+    <div class="chain">${t.chain.map((c,i)=>`<div class="cut"><span class="ar">${['SENSOR','EXEC','AI CORE','UPLINK'][i]}</span><h3>${c[0]}</h3><p>${c[1]}</p></div>`).join('')}</div>
+    <p class="mono" style="font-size:13px;color:var(--ice);margin:12px 0 36px">${t.chainNote}</p>
+    <h3 class="label" style="margin-bottom:14px">${t.stagesT}</h3>
+    <ol class="stages">${t.stages.map((s,i)=>`<li class="cut${i===3?' live':''}"><span class="n">${s[0]}</span><div><h3>${s[1]}</h3><p>${s[2]}</p></div><span class="chip${i===3?' live':''}">${s[3]}</span></li>`).join('')}</ol>
+    <h3 class="label" style="margin:36px 0 14px">${t.editsT}</h3>
+    <div class="edits">${t.edits.map(e=>`<div class="cut"><h3>${e[0]}</h3><p>${e[1]}</p><span class="ex">${e[2]}</span></div>`).join('')}</div>
+    <p style="margin-top:14px;color:#c9ced7;max-width:66ch">${t.editsNote}</p>
+  </section>
+  <section>
+    <div class="sechead"><h2>${t.s4}</h2></div>
+    <div class="intr">
+      <figure><div class="hud redf"><img src="img/mirror-error.webp" alt="${t.mirrorCap}" loading="lazy"></div><figcaption class="label" style="margin-top:8px;text-transform:none;letter-spacing:.04em">${t.mirrorCap}</figcaption></figure>
+      <div style="display:grid;gap:18px;min-width:0"><p class="lead" style="font-size:17px">${t.intrLead}</p>
+        <ul>${t.intr.map(i=>`<li><b>${i[0]}</b><span>${i[1]}</span></li>`).join('')}</ul></div>
+    </div>
+  </section>
+  <section>
+    <div class="sechead"><h2>${t.s5}</h2></div>
+    <p style="margin-bottom:16px;color:#c9ced7">${t.axesLead}</p>
+    <div class="axes">${t.axes.map(a=>`<div class="cut"><h3>${a[0]}</h3><p>${a[1]}</p></div>`).join('')}</div>
+    <p class="lead" style="margin-top:28px">${t.fourth}</p>
+  </section>
+  <section>
+    <div class="cut sealed"><span class="label" style="color:var(--ink)">${t.sealedT}</span><p style="color:#c9ced7">${t.sealed}</p></div>
+    <p style="margin-top:28px"><button type="button" class="relock" id="relock">${t.relock}</button></p>
+  </section>`;
+}
+
+function lore(){
+  const t = T[lang].lore;
+  const tagLbl = k => k==='canon' ? `<span class="tag canon">${lang==='ru'?'канон':'canon'}</span>` : `<span class="tag author">${lang==='ru'?'авторский лор':'author\'s lore'}</span>`;
+  return `
+  <section class="fade">
+    <div class="sechead"><h2 style="font-size:clamp(28px,5vw,48px)">${t.title}</h2></div>
+    <p class="lead" style="margin-bottom:28px">${t.lead}</p>
+    <div class="filter"><span class="mono" style="color:var(--faint)">/</span><input id="lore-q" type="search" placeholder="${t.filter}" aria-label="${t.filter}"></div>
+    <div id="lore-list">
+    ${t.groups.map(g=>`<div class="lg" style="margin-bottom:40px"><h3 class="label" style="margin-bottom:14px;color:var(--ink)">${g.t}</h3>
+      <div class="cards">${g.items.map(it=>`<article class="cut card" data-s="${esc((it[0]+' '+it[2]).toLowerCase())}"><div class="h"><h3>${it[0]}</h3>${tagLbl(it[1])}</div><p>${it[2]}</p></article>`).join('')}</div></div>`).join('')}
+    <div class="lg"><h3 class="label" style="margin-bottom:14px;color:var(--ink)">${t.slangT}</h3>
+      <div class="tblwrap"><table class="slang"><tbody>${t.slang.map(s=>`<tr class="card-row" data-s="${esc((s.join(' ')).toLowerCase())}"><td>${s[0]}</td>${lang==='ru'?`<td>${s[1]}</td>`:''}<td>${s[2]}</td></tr>`).join('')}</tbody></table></div></div>
+    </div>
+    <p class="empty" id="lore-none" hidden>${t.none}</p>
+  </section>`;
+}
+
+function paths(){
+  const t = T[lang].paths;
+  return `
+  <section class="fade">
+    <div class="sechead"><h2 style="font-size:clamp(28px,5vw,48px)">${t.title}</h2></div>
+    <p class="lead" style="margin-bottom:32px">${t.lead}</p>
+    <div class="paths">${t.list.map((p,i)=>`
+      <article class="cut path ${p.cls}">
+        <div class="ph"><div class="ico">${ICON[p.icon]}</div><div><span class="code">${t.code} 0${i+1}</span><h3>${p.name}</h3></div></div>
+        <div class="pb">
+          <p class="hook">${p.hook}</p>
+          <dl>${p.dl.map(d=>`<dt>${d[0]}</dt><dd>${d[1]}</dd>`).join('')}</dl>
+          <div class="tags">${p.tags.map(x=>`<span class="tag">${x}</span>`).join('')}</div>
+        </div>
+      </article>`).join('')}
+    </div>
+  </section>
+  <section>
+    <div class="sechead"><h2>${t.notesT}</h2></div>
+    <div class="notes">${t.notes.map(n=>`<div><h3>${n[0]}</h3><p>${n[1]}</p></div>`).join('')}</div>
+  </section>`;
+}
+
+/* ---------- shell ---------- */
+const view = document.getElementById('view');
+const PAGES = {home, dossier, truth, lore, paths};
+let current = 'home';
+
+function renderNav(){
+  const n = T[lang].nav;
+  const items = [['dossier',n.dossier],['lore',n.lore],['paths',n.paths]];
+  let html = items.map(([k,l])=>`<a href="#${k}"${current===k?' aria-current="page"':''}>${l}</a>`).join('');
+  html += unlocked
+    ? `<a href="#truth" class="sysl"${current==='truth'?' aria-current="page"':''}>${n.truth}</a>`
+    : `<a href="#breach" class="locked" aria-label="${lang==='ru'?'Закрытый раздел':'Locked section'}">${n.locked}</a>`;
+  document.getElementById('nav').innerHTML = html;
+  document.getElementById('foot').innerHTML = T[lang].foot;
+  const tk = T[lang].tick; document.getElementById('tick').innerHTML = tk.concat(tk).map(x=>`<span>${x}</span>`).join('');
+  document.getElementById('lang-ru').setAttribute('aria-pressed', lang==='ru');
+  document.getElementById('lang-en').setAttribute('aria-pressed', lang==='en');
+  document.documentElement.lang = lang;
+}
+
+function route(){
+  let h = (location.hash||'').slice(1) || 'home';
+  let scrollTo = null;
+  if(h==='breach'){ h='dossier'; scrollTo='breach'; }
+  if(h==='truth' && !unlocked){ h='dossier'; scrollTo='breach'; }
+  if(!PAGES[h]) h='home';
+  const changed = h!==current;
+  current = h;
+  document.body.classList.toggle('sys', h==='truth');
+  renderNav();
+  view.innerHTML = PAGES[h]();
+  bind();
+  if(changed){ view.classList.remove('jolt'); void view.offsetWidth; view.classList.add('jolt'); }
+  if(scrollTo){ const el=document.getElementById(scrollTo); if(el) el.scrollIntoView({block:'start'}); }
+  else if(changed) window.scrollTo(0,0);
+}
+
+function markSeen(k){
+  if(seen.has(k)) return;
+  seen.add(k);
+  store.set('desmond-seen',[...seen].join(''));
+  document.querySelectorAll(`.rd.key[data-k="${k}"]`).forEach(e=>e.classList.add('seen'));
+  const f = document.querySelector('.found');
+  if(f){ const s=f.children[+k-1]; s.classList.add('on'); s.textContent=KEY[+k-1]; }
+  const l = document.querySelector('.term > .label');
+  if(l) l.textContent = `${T[lang].dossier.found}: ${seen.size}/6`;
+}
+
+function bind(){
+  view.querySelectorAll('.rd').forEach(el=>{
+    const open = ()=>{ el.classList.add('open'); if(el.dataset.k) markSeen(el.dataset.k); };
+    el.addEventListener('mouseenter', open);
+    el.addEventListener('focus', open);
+    el.addEventListener('click', ()=>{ el.classList.toggle('open'); if(el.dataset.k) markSeen(el.dataset.k); });
+    el.addEventListener('mouseleave', ()=>el.classList.remove('open'));
+    el.addEventListener('blur', ()=>el.classList.remove('open'));
+  });
+  const gl = document.getElementById('gl-btn');
+  if(gl) gl.addEventListener('click', ()=>{
+    document.getElementById('term').hidden=false; gl.hidden=true;
+    document.getElementById('key-in').focus();
+  });
+  const form = document.getElementById('breach-form');
+  if(form) form.addEventListener('submit', e=>{
+    e.preventDefault();
+    const inp = document.getElementById('key-in');
+    const v = inp.value.trim().toUpperCase().replace(/\s+/g,'');
+    const out = document.getElementById('out');
+    const t = T[lang].dossier;
+    if(ACCEPT.includes(v)){
+      inp.disabled = true;
+      out.innerHTML='';
+      t.steps.forEach((s,i)=>setTimeout(()=>{
+        const sp=document.createElement('span'); sp.className = i===t.steps.length-1?'ok':''; sp.textContent='> '+s; out.appendChild(sp);
+        if(i===t.steps.length-1) setTimeout(()=>{ unlocked=true; store.set('desmond-unlocked','1'); location.hash='truth'; }, 650);
+      }, 380*i));
+    } else {
+      fails++;
+      out.innerHTML = `<span class="bad">${t.deny(fails)}</span>` + (fails>=3?`<span class="hint">${t.hint}</span>`:'');
+      inp.select();
+    }
+  });
+  const egg = document.getElementById('cap-egg');
+  if(egg) egg.addEventListener('click', openCap);
+  const bb = document.getElementById('ba-before'), ba = document.getElementById('ba-after');
+  if(bb){
+    const set = m => {
+      baMode = m;
+      bb.setAttribute('aria-pressed', m==='before'); ba.setAttribute('aria-pressed', m==='after');
+      const box = document.getElementById('ba');
+      box.classList.add('flick');
+      setTimeout(()=>{
+        box.className = 'cut ba '+m;
+        box.querySelectorAll('p').forEach(p=>p.textContent = m==='before'?p.dataset.b:p.dataset.a);
+      },120);
+    };
+    bb.addEventListener('click',()=>set('before'));
+    ba.addEventListener('click',()=>set('after'));
+  }
+  const rl = document.getElementById('relock');
+  if(rl) rl.addEventListener('click', ()=>{ unlocked=false; store.del('desmond-unlocked'); location.hash='dossier'; });
+  const q = document.getElementById('lore-q');
+  if(q) q.addEventListener('input', ()=>{
+    const s = q.value.trim().toLowerCase(); let any=false;
+    view.querySelectorAll('[data-s]').forEach(c=>{ const m=!s||c.dataset.s.includes(s); c.hidden=!m; if(m) any=true; });
+    view.querySelectorAll('.lg').forEach(g=>{ g.hidden = ![...g.querySelectorAll('[data-s]')].some(c=>!c.hidden); });
+    document.getElementById('lore-none').hidden = any;
+  });
+}
+
+/* blue cap */
+const modal = document.getElementById('modal');
+let lastFocus = null;
+function openCap(){
+  const c = T[lang].cap;
+  lastFocus = document.activeElement;
+  document.getElementById('modal-box').innerHTML = `${ICON.cap.replace('<svg','<svg width="48" height="48"')}<h2 id="modal-t">${c.t}</h2><p>${c.p}</p><p class="riddle">${c.r}</p><button type="button" id="modal-close">${c.c}</button>`;
+  modal.hidden = false;
+  document.getElementById('modal-close').addEventListener('click', closeCap);
+  document.getElementById('modal-close').focus();
+}
+function closeCap(){ modal.hidden = true; if(lastFocus) lastFocus.focus(); }
+modal.addEventListener('click', e=>{ if(e.target===modal) closeCap(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape' && !modal.hidden) closeCap(); });
+
+/* language */
+document.querySelectorAll('.lang button').forEach(b=>b.addEventListener('click',()=>{
+  lang = b.dataset.l; store.set('desmond-lang',lang);
+  const y = window.scrollY; route(); window.scrollTo(0,y);
+}));
+
+window.addEventListener('hashchange', route);
+route();
+
+try{
+  console.log('%c[KIROSHI v4.2.7] visual sync 87% — calibration OK','color:#8fdcff;font-family:monospace');
+  console.log('%c[NC-IS] reflection mismatch logged. subject unaware.','color:#d8323f;font-family:monospace');
+}catch(e){}
+})();
+</script>
+
+</body>
+</html>
