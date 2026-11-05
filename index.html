@@ -1358,16 +1358,20 @@ function bind(){
 
 /* ---------- breach protocol ---------- */
 const CODES = ['1C','55','BD','E9','7A','FF'];
-const N = 5, BUF = 6, LIMIT = 60;
+const N = 5, BUF = 6, LIMIT = 90, SEQ = 4;
 let bpState = null;
 const rnd = n => Math.floor(Math.random()*n);
 function bpNew(){
   if(bpState && bpState.tick) clearInterval(bpState.tick);
   const grid = Array.from({length:N},()=>Array.from({length:N},()=>CODES[rnd(CODES.length)]));
-  const seq = [CODES[rnd(6)],CODES[rnd(6)],CODES[rnd(6)]];
-  /* plant a guaranteed path: row 0 -> its column -> a row */
-  const c0 = rnd(N), r1 = 1+rnd(N-1); let c2 = rnd(N); while(c2===c0) c2 = rnd(N);
-  grid[0][c0]=seq[0]; grid[r1][c0]=seq[1]; grid[r1][c2]=seq[2];
+  const seq = Array.from({length:SEQ},()=>CODES[rnd(CODES.length)]);
+  /* plant a guaranteed path: top row, then alternate column / row through unused cells */
+  let r = 0, c = rnd(N); const taken = new Set([r*N+c]); grid[r][c] = seq[0];
+  for(let i=1;i<SEQ;i++){
+    const opts = [];
+    for(let k=0;k<N;k++){ const rr = i%2 ? k : r, cc = i%2 ? c : k; if(!taken.has(rr*N+cc)) opts.push([rr,cc]); }
+    [r,c] = opts[rnd(opts.length)]; taken.add(r*N+c); grid[r][c] = seq[i];
+  }
   bpState = {grid, seq, used:new Set(), axis:'row', idx:0, buf:[], over:false, left:LIMIT, tick:null, msg:null};
   bpRender();
 }
@@ -1403,7 +1407,7 @@ function bpRender(){
   let cells='';
   for(let r=0;r<N;r++) for(let c=0;c<N;c++){
     const used = st.used.has(r*N+c), line = !st.over && (st.axis==='row'?r===st.idx:c===st.idx), ok = bpValid(r,c);
-    const tgt = ok && st.grid[r][c]===nextTgt;
+    const tgt = false;
     cells += `<button type="button" data-r="${r}" data-c="${c}" class="${used?'used':''}${line?' line':''}${ok?' ok':''}${tgt?' tgt':''}" ${ok?'':'tabindex="-1" aria-disabled="true"'} aria-label="${t.cell} ${st.grid[r][c]}, ${r+1}:${c+1}">${st.grid[r][c]}</button>`;
   }
   const buf = Array.from({length:BUF},(_,i)=>`<span class="${st.buf[i]?'f':''}">${st.buf[i]||''}</span>`).join('');
