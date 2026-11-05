@@ -276,21 +276,42 @@ table.spec td{color:#c9cfda}
   91%{transform:translate(-1px,-1px);text-shadow:2px 0 var(--ice);clip-path:none}
   93%{transform:none;text-shadow:-3px 0 var(--red)}
 }
-.term{width:100%;max-width:660px;font-family:var(--mono);font-size:14px;display:grid;gap:10px;position:relative;z-index:1}
-.term .out{display:grid;gap:4px;color:var(--mute);min-height:1.6em}
-.term .out .ok{color:var(--ice);text-shadow:0 0 8px rgba(0,240,255,.6)}
-.term .out .bad{color:var(--red);text-shadow:0 0 8px rgba(255,42,79,.6)}
-.term form{display:flex;gap:0;border:1px solid var(--ice);background:#000;box-shadow:0 0 16px rgba(0,240,255,.15)}
-.term label.pr{padding:10px 0 10px 12px;color:var(--ice);flex:none}
-.term input{all:unset;flex:1;min-width:0;padding:10px 12px;color:var(--ice);font-family:var(--mono);font-size:16px;letter-spacing:.24em;text-transform:uppercase}
-.term input::placeholder{color:#1f5961}
-.term button{all:unset;cursor:pointer;padding:10px 16px;background:var(--ice);color:#001417;font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase}
-.term button:hover{background:#7ff8ff}
-.term button:focus-visible{outline:2px solid var(--yellow)}
-.hint{font-size:13px;color:var(--yellow);border-left:2px solid var(--yellow);padding-left:10px}
-.found{display:flex;gap:6px;flex-wrap:wrap}
-.found span{font-family:var(--mono);font-size:14px;width:30px;height:34px;display:grid;place-items:center;border:1px solid var(--line);color:var(--faint);background:#000}
-.found span.on{color:var(--red);border-color:var(--red);box-shadow:0 0 10px rgba(255,42,79,.45);text-shadow:0 0 6px var(--red)}
+.bp{width:100%;display:grid;grid-template-columns:auto minmax(0,1fr);gap:28px;position:relative;z-index:1;align-items:start}
+.bp .rules{grid-column:1/-1;font-size:14.5px;color:#c9cfda;max-width:72ch}
+.bp .rules b{color:var(--yellow);font-weight:600}
+.mxwrap{display:grid;gap:10px}
+.mxhead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--yellow)}
+.mxhead .tm{color:var(--ice);font-variant-numeric:tabular-nums}
+.mxhead .tm.low{color:var(--red)}
+.mx{display:grid;grid-template-columns:repeat(5,52px);grid-auto-rows:46px;gap:4px;padding:10px;border:1px solid var(--yellow);background:#0b0b05;box-shadow:0 0 18px rgba(252,238,10,.12)}
+.mx button{all:unset;display:grid;place-items:center;font-family:var(--mono);font-size:17px;font-weight:500;letter-spacing:.06em;color:#d9e19a;cursor:default;position:relative}
+.mx button.line{background:rgba(252,238,10,.09)}
+.mx button.ok{cursor:pointer;color:var(--yellow)}
+.mx button.ok:hover,.mx button.ok:focus-visible{background:var(--yellow);color:#000;outline:none;box-shadow:0 0 14px rgba(252,238,10,.6)}
+.mx button.used{color:transparent}
+.mx button.used::after{content:"[ ]";position:absolute;color:#4a4a2a;font-size:14px}
+.mx button.tgt{color:var(--ice);text-shadow:0 0 8px rgba(0,240,255,.6)}
+.mx button.ok.tgt:hover{color:#000;text-shadow:none}
+.side{display:grid;gap:18px;min-width:0;align-content:start}
+.bufrow{display:flex;gap:6px;flex-wrap:wrap}
+.bufrow span{width:44px;height:40px;display:grid;place-items:center;border:1px dashed #5c5711;font-family:var(--mono);font-size:15px;color:var(--yellow);background:#000}
+.bufrow span.f{border-style:solid;border-color:var(--yellow);box-shadow:0 0 8px rgba(252,238,10,.3)}
+.daemon{--bc:var(--ice-dim);--bgc:#061317;padding:14px 16px;display:grid;gap:10px}
+.daemon .dn{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ice)}
+.daemon .seq{display:flex;gap:8px}
+.daemon .seq span{font-family:var(--mono);font-size:17px;width:44px;height:36px;display:grid;place-items:center;border:1px solid var(--ice-dim);color:#7fb7bf}
+.daemon .seq span.m{background:var(--ice);color:#001417;border-color:var(--ice);box-shadow:0 0 10px rgba(0,240,255,.5)}
+.daemon.done{--bc:var(--ice)}
+.bpout{font-family:var(--mono);font-size:14px;display:grid;gap:4px;min-height:1.6em;color:var(--mute)}
+.bpout .ok{color:var(--ice);text-shadow:0 0 8px rgba(0,240,255,.6)}
+.bpout .bad{color:var(--red);text-shadow:0 0 8px rgba(255,42,79,.6)}
+.retry{all:unset;cursor:pointer;justify-self:start;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:8px 14px;border:1px solid var(--yellow);color:var(--yellow)}
+.retry:hover{background:var(--yellow);color:#000}
+.retry:focus-visible{outline:2px solid var(--ice)}
+@media (max-width:640px){
+  .bp{grid-template-columns:minmax(0,1fr)}
+  .mx{grid-template-columns:repeat(5,minmax(0,1fr));grid-auto-rows:44px;max-width:320px}
+}
 
 /* TRUTH */
 .sysHead{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);gap:36px;align-items:center}
@@ -497,7 +518,7 @@ const ACCEPT = ['MIRROR','ЗЕРКАЛО','ЬШККЩК','PTHRFKJ'];
 
 /* redaction bar. k = index (1..6) of a key letter, or 0 */
 function R(w, k){
-  if(k){
+  if(false){
     return `<span class="rd key${seen.has(String(k))?' seen':''}" tabindex="0" data-k="${k}" style="--w:${w}ch" aria-label="${lang==='ru'?'Закрытые данные':'Redacted'}"><span class="rd-in">[${k}] ${KEY[k-1]}</span></span>`;
   }
   return `<span class="rd" tabindex="0" style="--w:${w}ch" aria-label="${lang==='ru'?'Закрытые данные':'Redacted'}"><span class="rd-in">${lang==='ru'?'ЗАКРЫТО':'SEALED'}</span></span>`;
@@ -598,16 +619,19 @@ ru:{
     strip:[['car','Личный автомобиль, Центр'],['standing','Вне смены'],['mirror','Санузел, 06:12. Синхронизация оптики 87%']],
     breachT:'Доступ к полному файлу',
     breachSub:'Часть данных закрыта на уровне 4. У тебя уровень 2.',
-    breachBtn:'Рассекретить',
+    breachBtn:'Взломать',
+    bp:{rules:'Выбирай коды по очереди: <b>первый в подсвеченной верхней строке</b>, следующий в столбце выбранного кода, потом снова в строке, и так дальше. Собери в буфере последовательность демона.',
+        matrix:'Матрица кодов',time:'Время',buffer:'Буфер',daemon:'Демон',dname:'Обход допуска · уровень 4',
+        start:'Таймер пойдёт с первого хода.',fail:'СБОЙ. Буфер заполнен, последовательность не собрана.',stuck:'СБОЙ. Ходов не осталось.',timeout:'ВРЕМЯ ВЫШЛО. Сеть перестроила матрицу.',retry:'Новая попытка',cell:'Код'},
     prompt:'Введи ключ доступа',
     go:'Ввод',
     found:'Найдено фрагментов ключа',
     deny:n=>`ОТКАЗАНО. Неверный ключ. Попытка ${n}.`,
     hint:'СИСТЕМА: ключ лежит под плашками этого файла. Наведи курсор или нажми на них.',
-    steps:['обход ICE уровня 4…','подбор сессии…','снятие плашек…','ДОСТУП ПОЛУЧЕН'],
+    steps:['демон загружен…','обход ICE уровня 4…','снятие плашек…','ДОСТУП ПОЛУЧЕН'],
     ph:'______'
   },
-  cap:{t:'Объект без описи',p:'Синяя бейсболка. Рваная дыра над козырьком, края вывернуты наружу. В описи изъятых вещей не значится.',r:'Ключ — то, во что он смотрит каждое утро.',c:'Положить на место'},
+  cap:{t:'Объект без описи',p:'Синяя бейсболка. Рваная дыра над козырьком, края вывернуты наружу. В описи изъятых вещей не значится.',r:'Лежала за оружейной стойкой. Он не знает, чья она.',c:'Положить на место'},
   truth:{
     readout:[['ОБЪЕКТ','Десмонд, NC-IS-0736'],['ПРОТОКОЛ','CN-07 / Carpe Noctem'],['СТАДИЯ','IV, поддержание'],['ОСВЕДОМЛЁН','нет']],
     h1:'Его не починили. Его переписали.',
@@ -861,16 +885,19 @@ en:{
     strip:[['car','Personal vehicle, City Center'],['standing','Off duty'],['mirror','Bathroom, 06:12. Optic sync 87%']],
     breachT:'Full file access',
     breachSub:'Part of this record is sealed at clearance 4. You have clearance 2.',
-    breachBtn:'Declassify',
+    breachBtn:'Breach',
+    bp:{rules:'Pick codes in turn: <b>the first one in the highlighted top row</b>, the next in the column of that code, then in a row again, and so on. Assemble the daemon sequence in the buffer.',
+        matrix:'Code matrix',time:'Time',buffer:'Buffer',daemon:'Daemon',dname:'Clearance bypass · level 4',
+        start:'The timer starts with your first move.',fail:'FAILED. Buffer full, sequence not assembled.',stuck:'FAILED. No moves left.',timeout:'TIME OUT. The network rebuilt the matrix.',retry:'Try again',cell:'Code'},
     prompt:'Enter access key',
     go:'Enter',
     found:'Key fragments found',
     deny:n=>`DENIED. Wrong key. Attempt ${n}.`,
     hint:'SYSTEM: the key is under the black bars in this file. Hover over them or tap them.',
-    steps:['bypassing level 4 ICE…','hijacking session…','lifting redactions…','ACCESS GRANTED'],
+    steps:['daemon uploaded…','bypassing level 4 ICE…','lifting redactions…','ACCESS GRANTED'],
     ph:'______'
   },
-  cap:{t:'Unlisted item',p:'A blue baseball cap. A torn hole above the brim, edges pushed outward. Not on any evidence inventory.',r:'The key is what he looks into every morning.',c:'Put it back'},
+  cap:{t:'Unlisted item',p:'A blue baseball cap. A torn hole above the brim, edges pushed outward. Not on any evidence inventory.',r:'It was behind the gun rack. He doesn\'t know whose it is.',c:'Put it back'},
   truth:{
     readout:[['SUBJECT','Desmond, NC-IS-0736'],['PROTOCOL','CN-07 / Carpe Noctem'],['STAGE','IV, maintenance'],['AWARE','no']],
     h1:'They didn\'t fix him. They rewrote him.',
@@ -1129,16 +1156,7 @@ function dossier(){
       <div class="bhead"><span class="label" style="color:var(--red)">${lang==='ru'?'Уровень 4':'Clearance 4'}</span><h2>${t.breachT}</h2><p style="color:var(--mute)">${t.breachSub}</p></div>
       ${unlocked ? `<a class="gl sysgo" href="#truth"><span>${T[lang].nav.truth} →</span></a>` : `
       <button type="button" class="gl" id="gl-btn"><span>${t.breachBtn}</span></button>
-      <div class="term" id="term" hidden>
-        <div class="found" aria-label="${t.found}">${found}</div>
-        <span class="label">${t.found}: ${seen.size}/6</span>
-        <form id="breach-form" autocomplete="off">
-          <label class="pr" for="key-in">&gt;</label>
-          <input id="key-in" name="key" placeholder="${t.ph}" aria-label="${t.prompt}" maxlength="12" spellcheck="false">
-          <button type="submit">${t.go}</button>
-        </form>
-        <div class="out" id="out" aria-live="polite"><span>${t.prompt}</span></div>
-      </div>`}
+      <div class="bp" id="bp" hidden></div>`}
     </div>
   </section>`;
 }
@@ -1268,6 +1286,7 @@ function renderNav(){
 }
 
 function route(){
+  if(bpState && bpState.tick && !bpState.over){ clearInterval(bpState.tick); bpState.tick=null; }
   let h = (location.hash||'').slice(1) || 'home';
   let scrollTo = null;
   if(h==='breach'){ h='dossier'; scrollTo='breach'; }
@@ -1306,28 +1325,8 @@ function bind(){
   });
   const gl = document.getElementById('gl-btn');
   if(gl) gl.addEventListener('click', ()=>{
-    document.getElementById('term').hidden=false; gl.hidden=true;
-    document.getElementById('key-in').focus();
-  });
-  const form = document.getElementById('breach-form');
-  if(form) form.addEventListener('submit', e=>{
-    e.preventDefault();
-    const inp = document.getElementById('key-in');
-    const v = inp.value.trim().toUpperCase().replace(/\s+/g,'');
-    const out = document.getElementById('out');
-    const t = T[lang].dossier;
-    if(ACCEPT.includes(v)){
-      inp.disabled = true;
-      out.innerHTML='';
-      t.steps.forEach((s,i)=>setTimeout(()=>{
-        const sp=document.createElement('span'); sp.className = i===t.steps.length-1?'ok':''; sp.textContent='> '+s; out.appendChild(sp);
-        if(i===t.steps.length-1) setTimeout(()=>{ unlocked=true; store.set('desmond-unlocked','1'); location.hash='truth'; }, 650);
-      }, 380*i));
-    } else {
-      fails++;
-      out.innerHTML = `<span class="bad">${t.deny(fails)}</span>` + (fails>=3?`<span class="hint">${t.hint}</span>`:'');
-      inp.select();
-    }
+    gl.hidden = true; document.getElementById('bp').hidden = false;
+    bpNew(); const f = document.querySelector('#bp .mx button.ok'); if(f) f.focus();
   });
   const egg = document.getElementById('cap-egg');
   if(egg) egg.addEventListener('click', openCap);
@@ -1357,6 +1356,80 @@ function bind(){
   });
 }
 
+/* ---------- breach protocol ---------- */
+const CODES = ['1C','55','BD','E9','7A','FF'];
+const N = 5, BUF = 6, LIMIT = 60;
+let bpState = null;
+const rnd = n => Math.floor(Math.random()*n);
+function bpNew(){
+  if(bpState && bpState.tick) clearInterval(bpState.tick);
+  const grid = Array.from({length:N},()=>Array.from({length:N},()=>CODES[rnd(CODES.length)]));
+  const seq = [CODES[rnd(6)],CODES[rnd(6)],CODES[rnd(6)]];
+  /* plant a guaranteed path: row 0 -> its column -> a row */
+  const c0 = rnd(N), r1 = 1+rnd(N-1); let c2 = rnd(N); while(c2===c0) c2 = rnd(N);
+  grid[0][c0]=seq[0]; grid[r1][c0]=seq[1]; grid[r1][c2]=seq[2];
+  bpState = {grid, seq, used:new Set(), axis:'row', idx:0, buf:[], over:false, left:LIMIT, tick:null, msg:null};
+  bpRender();
+}
+function bpMatch(){
+  const b = bpState.buf, q = bpState.seq;
+  for(let i=0;i+q.length<=b.length;i++){ if(q.every((x,j)=>b[i+j]===x)) return q.length; }
+  for(let k=Math.min(q.length-1,b.length);k>0;k--){ if(q.slice(0,k).every((x,j)=>b[b.length-k+j]===x)) return k; }
+  return 0;
+}
+function bpValid(r,c){
+  const st = bpState; if(st.over || st.used.has(r*N+c)) return false;
+  return st.axis==='row' ? r===st.idx : c===st.idx;
+}
+function bpPick(r,c){
+  const st = bpState; if(!bpValid(r,c)) return;
+  if(!st.tick){ st.tick = setInterval(()=>{ st.left--; const el=document.querySelector('#bp .tm'); if(el){ el.textContent=fmt(st.left); el.classList.toggle('low',st.left<=10);} if(st.left<=0){ clearInterval(st.tick); st.over=true; st.msg=['bad','timeout']; bpRender(); } },1000); }
+  st.buf.push(st.grid[r][c]); st.used.add(r*N+c);
+  if(st.axis==='row'){ st.axis='col'; st.idx=c; } else { st.axis='row'; st.idx=r; }
+  const m = bpMatch();
+  if(m===st.seq.length){ st.over=true; clearInterval(st.tick); bpRender(); bpWin(); return; }
+  let any=false; for(let i=0;i<N;i++){ const rr=st.axis==='row'?st.idx:i, cc=st.axis==='row'?i:st.idx; if(!st.used.has(rr*N+cc)) any=true; }
+  if(st.buf.length>=BUF){ st.over=true; clearInterval(st.tick); st.msg=['bad','fail']; }
+  else if(!any){ st.over=true; clearInterval(st.tick); st.msg=['bad','stuck']; }
+  bpRender();
+  const nx = document.querySelector(`#bp .mx button[data-r="${r}"][data-c="${c}"]`);
+  if(nx && !st.over){ const f=document.querySelector('#bp .mx button.ok'); if(f) f.focus(); }
+}
+const fmt = s => { s=Math.max(0,s); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
+function bpRender(){
+  const box = document.getElementById('bp'); if(!box||!bpState) return;
+  const st = bpState, t = T[lang].dossier.bp, m = bpMatch();
+  const nextTgt = st.over ? null : st.seq[m];
+  let cells='';
+  for(let r=0;r<N;r++) for(let c=0;c<N;c++){
+    const used = st.used.has(r*N+c), line = !st.over && (st.axis==='row'?r===st.idx:c===st.idx), ok = bpValid(r,c);
+    const tgt = ok && st.grid[r][c]===nextTgt;
+    cells += `<button type="button" data-r="${r}" data-c="${c}" class="${used?'used':''}${line?' line':''}${ok?' ok':''}${tgt?' tgt':''}" ${ok?'':'tabindex="-1" aria-disabled="true"'} aria-label="${t.cell} ${st.grid[r][c]}, ${r+1}:${c+1}">${st.grid[r][c]}</button>`;
+  }
+  const buf = Array.from({length:BUF},(_,i)=>`<span class="${st.buf[i]?'f':''}">${st.buf[i]||''}</span>`).join('');
+  const seq = st.seq.map((x,i)=>`<span class="${i<m?'m':''}">${x}</span>`).join('');
+  let out = st.msg ? `<span class="bad">&gt; ${t[st.msg[1]]}</span>` : (st.buf.length? '' : `<span>&gt; ${t.start}</span>`);
+  box.innerHTML = `<p class="rules">${t.rules}</p>
+    <div class="mxwrap"><div class="mxhead"><span>${t.matrix}</span><span>${t.time} <span class="tm${st.left<=10?' low':''}">${fmt(st.left)}</span></span></div>
+      <div class="mx" role="grid" aria-label="${t.matrix}">${cells}</div></div>
+    <div class="side">
+      <div><span class="label" style="color:var(--yellow)">${t.buffer}</span><div class="bufrow" style="margin-top:8px">${buf}</div></div>
+      <div class="cut daemon${m===st.seq.length?' done':''}"><span class="dn">${t.daemon}: ${t.dname}</span><div class="seq">${seq}</div></div>
+      <div class="bpout" id="bpout" aria-live="polite">${out}</div>
+      ${st.msg?`<button type="button" class="retry" id="bp-retry">${t.retry}</button>`:''}
+    </div>`;
+  box.querySelectorAll('.mx button.ok').forEach(b=>b.addEventListener('click',()=>bpPick(+b.dataset.r,+b.dataset.c)));
+  const rt = document.getElementById('bp-retry'); if(rt) rt.addEventListener('click',()=>{ bpNew(); const f=document.querySelector('#bp .mx button.ok'); if(f) f.focus(); });
+}
+function bpWin(){
+  const out = document.getElementById('bpout'); out.innerHTML='';
+  const steps = T[lang].dossier.steps;
+  steps.forEach((s,i)=>setTimeout(()=>{
+    const sp=document.createElement('span'); sp.className = i===steps.length-1?'ok':''; sp.textContent='> '+s; out.appendChild(sp);
+    if(i===steps.length-1) setTimeout(()=>{ unlocked=true; store.set('desmond-unlocked','1'); location.hash='truth'; }, 700);
+  }, 380*i));
+}
+
 /* blue cap */
 const modal = document.getElementById('modal');
 let lastFocus = null;
@@ -1375,7 +1448,9 @@ document.addEventListener('keydown', e=>{ if(e.key==='Escape' && !modal.hidden) 
 /* language */
 document.querySelectorAll('.lang button').forEach(b=>b.addEventListener('click',()=>{
   lang = b.dataset.l; store.set('desmond-lang',lang);
-  const y = window.scrollY; route(); window.scrollTo(0,y);
+  const y = window.scrollY; const playing = bpState && !bpState.over && document.getElementById('bp') && !document.getElementById('bp').hidden;
+  route(); window.scrollTo(0,y);
+  if(playing){ const g=document.getElementById('gl-btn'); if(g){ g.hidden=true; document.getElementById('bp').hidden=false; bpRender(); } }
 }));
 
 window.addEventListener('hashchange', route);
