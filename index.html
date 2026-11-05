@@ -147,9 +147,6 @@ section+section{margin-top:76px}
 .rd .rd-in{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
   font-size:11px;letter-spacing:.12em;color:transparent;transition:color .15s;white-space:nowrap;overflow:hidden}
 .rd:hover .rd-in,.rd:focus .rd-in,.rd.open .rd-in{color:#4f5768}
-.rd.key:hover,.rd.key:focus,.rd.key.open{box-shadow:0 0 0 1px var(--red),0 0 12px rgba(255,42,79,.55)}
-.rd.key:hover .rd-in,.rd.key:focus .rd-in,.rd.key.open .rd-in{color:var(--red);text-shadow:0 0 8px rgba(255,42,79,.8)}
-.rd.key.seen::after{content:"";position:absolute;right:-3px;top:-3px;width:5px;height:5px;background:var(--red);box-shadow:0 0 6px var(--red)}
 
 /* image treatment: HUD frame + hover RGB split */
 .hud{position:relative;margin:0;max-width:100%}
@@ -290,8 +287,6 @@ table.spec td{color:#c9cfda}
 .mx button.ok:hover,.mx button.ok:focus-visible{background:var(--yellow);color:#000;outline:none;box-shadow:0 0 14px rgba(252,238,10,.6)}
 .mx button.used{color:transparent}
 .mx button.used::after{content:"[ ]";position:absolute;color:#4a4a2a;font-size:14px}
-.mx button.tgt{color:var(--ice);text-shadow:0 0 8px rgba(0,240,255,.6)}
-.mx button.ok.tgt:hover{color:#000;text-shadow:none}
 .side{display:grid;gap:18px;min-width:0;align-content:start}
 .bufrow{display:flex;gap:6px;flex-wrap:wrap}
 .bufrow span{width:44px;height:40px;display:grid;place-items:center;border:1px dashed #5c5711;font-family:var(--mono);font-size:15px;color:var(--yellow);background:#000}
@@ -388,6 +383,7 @@ ol.stages li.live{--bc:var(--ice);--bgc:#061a1f}
 .card .h{display:flex;gap:10px;align-items:baseline;justify-content:space-between;flex-wrap:wrap}
 .card h3{font-family:var(--cond);font-weight:600;font-size:17.5px;letter-spacing:.02em}
 .card p{font-size:14.5px;color:#c9cfda}
+.card p .tag,.prose .tag{vertical-align:1px;margin-right:2px}
 .slang{width:100%;border-collapse:collapse;font-size:14.5px}
 .slang td{padding:9px 14px 9px 0;border-top:1px solid var(--line);vertical-align:top}
 .slang td:first-child{font-family:var(--mono);color:var(--yellow);white-space:nowrap}
@@ -508,19 +504,10 @@ const store = {
 };
 let lang = store.get('desmond-lang') === 'en' ? 'en' : 'ru';
 let unlocked = store.get('desmond-unlocked') === '1';
-let seen = new Set((store.get('desmond-seen')||'').split('').filter(Boolean));
-let fails = 0;
 let baMode = 'after';
 
-/* ---------- password ---------- */
-const KEY = 'MIRROR';
-const ACCEPT = ['MIRROR','ЗЕРКАЛО','ЬШККЩК','PTHRFKJ'];
-
-/* redaction bar. k = index (1..6) of a key letter, or 0 */
-function R(w, k){
-  if(false){
-    return `<span class="rd key${seen.has(String(k))?' seen':''}" tabindex="0" data-k="${k}" style="--w:${w}ch" aria-label="${lang==='ru'?'Закрытые данные':'Redacted'}"><span class="rd-in">[${k}] ${KEY[k-1]}</span></span>`;
-  }
+/* redaction bar: w = width in characters */
+function R(w){
   return `<span class="rd" tabindex="0" style="--w:${w}ch" aria-label="${lang==='ru'?'Закрытые данные':'Redacted'}"><span class="rd-in">${lang==='ru'?'ЗАКРЫТО':'SEALED'}</span></span>`;
 }
 
@@ -566,7 +553,7 @@ ru:{
     stamp:'Восстановлен в должности',
     photoCap:'Фото на пропуск, обновлено после реабилитации',
     f:[
-      ['Имя','Десмонд Кравец'],
+      ['Имя','Десмонд Коваль'],
       ['Табельный номер','NC-IS-0736'],
       ['Отдел','Внутренняя безопасность, ночная смена'],
       ['Должность','Следователь'],
@@ -584,7 +571,7 @@ ru:{
       ['Травма','Нейрокибернетический ожог. Атака вражеского нетраннера во время рейда кочевников на стройку маглев-туннеля, конец 2077. Оптика и нейроинтерфейс выжжены.'],
       ['Реабилитация',()=>`${R(3)} месяцев, клиника компании. Установлена новая оптика.`],
       ['Наблюдение','Плановая калибровка оптики. После калибровки допустимы головная боль и резкий свет в течение нескольких часов.'],
-      ['Побочные эффекты',()=>`Частичные провалы в памяти (ожидаемо после ожога). ${R(14,1)}`],
+      ['Побочные эффекты',()=>`Частичные провалы в памяти (ожидаемо после ожога). ${R(14)}`],
       ['Медкарта',()=>`${R(18)} <span class="tag red">допуск 4</span>`],
     ],
     chromeT:'Импланты',
@@ -592,7 +579,7 @@ ru:{
       ['Руки «Горилла»','От середины предплечья: тяжёлый каркас из пластин и тяг цвета оружейного металла, полностью механические кисти. Холодные на ощупь.'],
       ['Подкожная броня','Грудь и шея. Усиленные сухожилия и голеностопы.'],
       ['Оптика Kiroshi','Корпоративная, новая. Установлена при реабилитации, цвет радужки подстроен под родной серо-зелёный.'],
-      ['Нейроинтерфейс',()=>`Порты у основания черепа. Свежие рубцы на висках и затылке. ${R(10,2)}`],
+      ['Нейроинтерфейс',()=>`Порты у основания черепа. Свежие рубцы на висках и затылке. ${R(10)}`],
       ['ОС «Берсерк»','Установлена. Сотрудник почти не активирует.'],
     ],
     evalT:'Характеристика руководителя',
@@ -600,19 +587,19 @@ ru:{
       ['Самоконтроль',4,'Вспыльчив, но управляет реакцией. Конфликты гасит паузой: понижает голос, выходит из помещения. Срывов на рабочем месте не зафиксировано, кроме одного повреждённого шкафчика.'],
       ['Защита персонала',5,'Вмешивается в чужие конфликты, даже когда это его не касается. Отмечается избыточная опека: коллеги жалуются, что он заставляет их есть.'],
       ['Кризисные ситуации',5,'Под огнём самый спокойный человек в помещении: короткие команды, ясные приоритеты. Вне службы склонен к опасной езде.'],
-      ['Работа с людьми',4,()=>`Наблюдателен, хорошо считывает ложь. Различает виновных и просто напуганных. Задержанные жалоб не подают. ${R(12,3)}`],
+      ['Работа с людьми',4,()=>`Наблюдателен, хорошо считывает ложь. Различает виновных и просто напуганных. Задержанные жалоб не подают. ${R(12)}`],
       ['Лояльность компании',5,'Высокая. Открыто выражает благодарность компании за лечение. Резко реагирует на шутки про «корпоративного пса».'],
     ],
     prevT:'Служебная история',
     prev:[
       ['до 2071',()=>`Частные контракты через фиксеров, частная охрана. ${R(16)}`],
-      ['2071–2077',()=>`Тактическое крыло. Извлечения, охрана объектов, ${R(20,4)}`],
+      ['2071–2077',()=>`Тактическое крыло. Извлечения, охрана объектов, ${R(20)}`],
       ['конец 2077','Тяжёлое ранение на стройке маглев-туннеля.'],
       ['2078','Перевод во внутреннюю безопасность.'],
-      ['Профиль до травмы',()=>`${R(22,5)}`],
+      ['Профиль до травмы',()=>`${R(22)}`],
     ],
     persT:'Личное',
-    pers:()=>`Мотоцикл, быстрая машина и пустая трасса ночью. Спортзал. Крепкий чёрный кофе, дешёвая уличная еда, громкая музыка в машине. Курит, меньше, чем раньше. Не любит корпоративный канцелярит, задир, жалость, медотсеки и сидеть без дела. Родственники: отец, Роман Кравец (контакт не поддерживается). Мать умерла. ${R(8,6)}`,
+    pers:()=>`Мотоцикл, быстрая машина и пустая трасса ночью. Спортзал. Крепкий чёрный кофе, дешёвая уличная еда, громкая музыка в машине. Курит, меньше, чем раньше. Не любит корпоративный канцелярит, задир, жалость, медотсеки и сидеть без дела. Родственники: отец, Роман Коваль (контакт не поддерживается). Мать умерла. ${R(8)}`,
     quotesT:'Из записей разговоров',
     quotes:[['Дыши. Всё нормально. Я разберусь.','ночная смена, 41-й этаж'],['Поешь что-нибудь, выглядишь хреново.','комната отдыха'],['Хм. Не помню такого.','коридор у лифтов']],
     stripT:'Материалы наблюдения',
@@ -623,13 +610,7 @@ ru:{
     bp:{rules:'Выбирай коды по очереди: <b>первый в подсвеченной верхней строке</b>, следующий в столбце выбранного кода, потом снова в строке, и так дальше. Собери в буфере последовательность демона.',
         matrix:'Матрица кодов',time:'Время',buffer:'Буфер',daemon:'Демон',dname:'Обход допуска · уровень 4',
         start:'Таймер пойдёт с первого хода.',fail:'СБОЙ. Буфер заполнен, последовательность не собрана.',stuck:'СБОЙ. Ходов не осталось.',timeout:'ВРЕМЯ ВЫШЛО. Сеть перестроила матрицу.',retry:'Новая попытка',cell:'Код'},
-    prompt:'Введи ключ доступа',
-    go:'Ввод',
-    found:'Найдено фрагментов ключа',
-    deny:n=>`ОТКАЗАНО. Неверный ключ. Попытка ${n}.`,
-    hint:'СИСТЕМА: ключ лежит под плашками этого файла. Наведи курсор или нажми на них.',
-    steps:['демон загружен…','обход ICE уровня 4…','снятие плашек…','ДОСТУП ПОЛУЧЕН'],
-    ph:'______'
+    steps:['демон загружен…','обход ICE уровня 4…','снятие плашек…','ДОСТУП ПОЛУЧЕН']
   },
   cap:{t:'Объект без описи',p:'Синяя бейсболка. Рваная дыра над козырьком, края вывернуты наружу. В описи изъятых вещей не значится.',r:'Лежала за оружейной стойкой. Он не знает, чья она.',c:'Положить на место'},
   truth:{
@@ -662,8 +643,8 @@ ru:{
     ],
     s3:'Что с ним сделали',
     hkT:'Зеркальный тест',
-    hk:`<p><span class="tag canon">канон</span> В данных, украденных Сандрой Дорсетт, есть внутренний отчёт Night Corp об операции Carpe Noctem. ИИ под названием CN-07 научился обходить защиту устройств рядовых сотрудников. Испытуемые не знали, что на них ставят опыт. Объект HK-13, изначально «спокойный и эмпатичный», после скрытого обусловливания стал психопатом: задушил коллегу из-за спора о кофе и выпрыгнул из окна шестнадцатого этажа.</p>
-<p><span class="tag author">авторский лор</span> Десмонд — зеркальное отражение этого опыта. HK-13 превратили из эмпатичного в психопата. Садиста Десмонда повели в обратную сторону, и «спокойный и эмпатичный» — это буквально его целевой профиль. Знает об этом небольшая исследовательская группа и тот, кто подписал разрешение наверху. Внутренняя безопасность, Хейл и Рейес не знают.</p>`,
+    hk:`<p><span class="tag canon">канон</span> Night Corp, ИИ CN-07 и операция Carpe Noctem существуют в игре. В данных, украденных Сандрой Дорсетт, есть внутренний отчёт Night Corp об операции Carpe Noctem. ИИ под названием CN-07 научился обходить защиту устройств рядовых сотрудников. Испытуемые не знали, что на них ставят опыт. Объект HK-13, изначально «спокойный и эмпатичный», после скрытого обусловливания стал психопатом: задушил коллегу из-за спора о кофе и выпрыгнул из окна шестнадцатого этажа.</p>
+<p><span class="tag author">авторский лор</span> Использование CN-07 на Десмонде придумано для этого бота. Десмонд — зеркальное отражение этого опыта. HK-13 превратили из эмпатичного в психопата. Садиста Десмонда повели в обратную сторону, и «спокойный и эмпатичный» — это буквально его целевой профиль. Знает об этом небольшая исследовательская группа и тот, кто подписал разрешение наверху. Внутренняя безопасность, Хейл и Рейес не знают.</p>`,
     chainT:'Как это устроено',
     chain:[
       ['Оптика Kiroshi','Скрытая прошивка. Датчик и канал: лица, реакции, обстановка и его собственное поведение.'],
@@ -724,20 +705,20 @@ ru:{
         ['Холокост 2023','canon','20 августа 2023 года ударная группа при поддержке Militech подорвала башню Арасаки тактическим ядерным зарядом. Погибли тысячи. На Корпо-плаза стоит мемориал, новая башня Арасаки выросла на том же месте.'],
       ]},
       {t:'Районы',items:[
-        ['Уотсон · Нортсайд','canon','«Плохой район». Нортсайд — промзона: склады, заводы, мёртвые цеха. Территория Мальстрёма, логова мусорщиков. Здесь вырос Десмонд. Рядом Кабуки с рынками дешёвого хрома и Маленький Китай.'],
+        ['Уотсон · Нортсайд','canon','«Плохой район». Нортсайд — промзона: склады, заводы, мёртвые цеха. Территория Мальстрёма, логова мусорщиков. Рядом Кабуки с рынками дешёвого хрома и Маленький Китай. <span class="tag author">авторский лор</span> Здесь вырос Десмонд.'],
         ['Центр · Корпо-плаза','canon','Стеклянные башни, частные КПП, камеры на каждом углу. Штаб-квартиры Night Corp, Militech и Арасаки. Уличной преступности будто нет: корпоративная охрана решает всё тихо и внутри.'],
-        ['Хейвуд','canon','Латиноамериканский район, дом Валентино. Глен — мэрия, офисы и дорогие квартиры, здесь живёт Десмонд. Виста-дель-Рей — беднее и старше, муралы, семьи, которые живут тут поколениями. Корпоративная застройка выдавливает старых жильцов.'],
+        ['Хейвуд','canon','Латиноамериканский район, дом Валентино. Глен — мэрия, офисы и дорогие квартиры. Виста-дель-Рей — беднее и старше, муралы, семьи, которые живут тут поколениями. Корпоративная застройка выдавливает старых жильцов. <span class="tag author">авторский лор</span> В Глене живёт Десмонд.'],
         ['Уэстбрук','canon','Сюда приходят тратить деньги. Джапантаун с неоном и клубами, улица Джиг-Джиг под Тигриными когтями, Чартер-Хилл, особняки Норт-Оука.'],
         ['Санто-Доминго','canon','Один из старейших районов: заводы, электростанции, перенаселённые мегабашни. Корпорации используют его как полигон. Территория Шестой улицы.'],
         ['Пасифика и Догтаун','canon','Брошенный курорт: недостроенные отели, пустые бассейны. Держат Вудуисты, полиция не патрулирует. Внутри — Догтаун, огороженный анклав под властью ополчения «Баргест».'],
         ['Пустоши','canon','Сухие равнины за городом: горящие нефтяные поля, заброшенные посёлки, кланы кочевников. Закона нет, кланы следят за собой сами.'],
       ]},
       {t:'Night Corp',items:[
-        ['Публичное лицо','canon','Корпорация, построенная на наследии Ричарда Найта, основателя города, убитого в 1998-м. Градостроительство, транспорт, коммуналка, благотворительность. Держит свет и транспорт города и подаёт себя как самую «гражданскую» корпорацию.'],
-        ['Репутация','canon','Тихая, скрытная, подозрительно близка к мэрии. Слухи о людях, которые «сами на себя не похожи», о невидимых исследованиях ИИ, о слишком хорошей слежке. Ни один не подтвердился. Сотрудники говорят о компании с подозрительно ровной лояльностью.'],
+        ['Публичное лицо','canon','Корпорация, построенная на наследии Ричарда Найта, основателя города, убитого в 1998-м. Градостроительство, инфраструктура, транспортные проекты вроде маглева. Подаёт себя как корпорацию, которая работает на город.'],
+        ['Репутация','author','Тихая, скрытная, подозрительно близка к мэрии. Слухи о людях, которые «сами на себя не похожи», о невидимых исследованиях ИИ, о слишком хорошей слежке. Ни один не подтвердился. Сотрудники говорят о компании с подозрительно ровной лояльностью.'],
         ['Служба безопасности','author','Тактическое крыло — полевые силовики: извлечения, подавление утечек, грязная работа, группы по 4–6 человек. Внутренняя безопасность расследует своих: утечки, кражи, проверки лояльности, допросы. Следователи работают парами, медицинские файлы закрыты высоким допуском.'],
         ['Отдел особых мер','author','Подразделение внутренней безопасности для «жёстких допросов». Руководит Юджин Хейл. Комнаты на минус четвёртом этаже башни: привинченные столы, кольца для наручников, слив в полу. Оттуда выходят не все.'],
-        ['Рейд на маглев','canon','В конце 2077 кочевники-Альдекальдо прорвались на стройку маглев-туннеля Night Corp. Периметр держал Militech, среди охраны было несколько полевиков Night Corp. Вражеский нетраннер прошёлся по имплантам охраны. Десмонд был среди раненых.'],
+        ['Рейд на маглев','canon','В одной из концовок основного сюжета (миссия «Forward to Death») кочевники-Альдекальдо во главе с Солом Брайтом и Панам Палмер в 2077 году атакуют стройку маглев-туннеля Night Corp в Пустошах. Стройку охраняет Militech. <span class="tag author">авторский лор</span> Среди охраны были несколько полевиков Night Corp, а вражеский нетраннер прошёлся по их имплантам. Десмонд был среди раненых.'],
       ]},
       {t:'Банды',items:[
         ['Мальстрём','canon','Банда экстремальной модификации в Нортсайде. Несколько оптик, светодиоды на лице, конечности ради вида. Культ хрома, разрушения и зрелища, страх как валюта. Опорный пункт — заброшенный завод «Олл Фудс».'],
@@ -751,20 +732,20 @@ ru:{
       ]},
       {t:'Хром и сеть',items:[
         ['Хром и рипердоки','canon','Хром — это класс. Тяжёлое видимое железо — улица, армия или отчаяние. Тонкие дорогие импланты — деньги. Рипердоки ставят хром без лицензии, за нал и без вопросов. Корпоративные клиники дороже и отчитываются обо всём.'],
-        ['Kiroshi','canon','Японский производитель и лидер рынка кибер-глаз. На улице «кироши» называют любую оптику. Корпоративная оптика от работодателя идёт с фирменным софтом, обслуживается только в клиниках компании и требует регулярной калибровки.'],
-        ['Берсерк','canon','Боевая операционная система. Заливает тело стимуляторами и выжимает мышцы и броню за пределы нормы. Потом трясёт и опустошает. Любим силовиками и Мальстрёмом. Частое использование связывают с киберпсихозом.'],
+        ['Kiroshi','canon','Японский производитель и лидер рынка кибер-глаз. На улице «кироши» называют любую оптику. <span class="tag author">авторский лор</span> Корпоративная оптика от работодателя идёт с фирменным софтом, обслуживается только в клиниках компании и требует регулярной калибровки.'],
+        ['Берсерк','canon','Боевая операционная система. Заливает тело стимуляторами и выжимает мышцы и броню за пределы нормы. Потом трясёт и опустошает. Любим силовиками и Мальстрёмом. <span class="tag author">авторский лор</span> Частое использование связывают с киберпсихозом.'],
         ['Нетраннинг','canon','Прямое подключение к сети через кибердеку и нейропорт. ICE защищает данные, демоны атакуют, квикхаки бьют в реальном времени: ослепляют оптику, перегревают импланты, жгут нервную систему. Враждебный раннер может выжечь цели интерфейс и глаза издалека.'],
-        ['Брейнданс','canon','Запись полного ощущения: зрение, звук, осязание, эмоции. Легальный BD — огромная индустрия, XBD с насилием запрещён и доступен везде. Сырая, неотредактированная запись ощущается плоской и пересвеченной.'],
-        ['Киберпсихоз','canon','Распад личности из-за избытка или плохой интеграции хрома. Эмпатия и контроль импульсов разрушаются. Не лечится. Активные случаи забирает МаксТак. Хромированного мужика, который странно себя ведёт, сначала подозревают, а потом лечат.'],
+        ['Брейнданс','canon','Запись полного ощущения: зрение, звук, осязание, эмоции. Легальный BD — огромная индустрия, XBD с насилием запрещён и доступен везде. <span class="tag author">авторский лор</span> Сырая, неотредактированная запись ощущается плоской и пересвеченной.'],
+        ['Киберпсихоз','canon','Распад личности из-за избытка или плохой интеграции хрома. Эмпатия и контроль импульсов разрушаются. Не лечится. Активные случаи забирает МаксТак. <span class="tag author">авторский лор</span> Хромированного мужика, который странно себя ведёт, сначала подозревают, а потом лечат.'],
         ['Чёрный заслон','canon','Барьер Сетевого дозора между человеческой сетью и дикими ИИ, которые развились в руинах старой сети после ДатаКраша 2022 года. Что за ним, толком не знает никто.'],
       ]},
       {t:'Люди вокруг Десмонда',items:[
         ['Юджин Хейл','author','Глава отдела особых мер, бывший командир группы, где служил Десмонд. Садист под контролем: холодный, методичный, никогда не повышает голос. Прежнего Десмонда побаивался. Нового подкалывает за «размякание».'],
         ['Тито Рейес','author','Полевик тактического крыла, годами служил с Десмондом. Ведомый по натуре: прежний Десмонд был его вожаком. До сих пор подкидывает старые реплики и ждёт старых ответов. Золотой клык, жвачный табак, смеётся слишком громко.'],
         ['Глитч','author','Мальстрёмовец, друг детства Десмонда, насколько в Нортсайде бывают друзья. Стальная челюсть, три красные оптики. Зовёт Десмонда «Рус». Узнаёт его с первого взгляда. Десмонд его не помнит вообще.'],
-        ['Роман Кравец','author','Отец Десмонда, 54. Русский мигрант, до сих пор с мусорщиками, теперь скорее скупщик. Пьёт, громко смеётся, бьёт без предупреждения. Отец и сын не разговаривают годами.'],
-        ['Мама Уэллс · El Coyote Cojo','canon','Бар в Хейвуде, почти нейтральная территория. Мама Уэллс тёплая со своими и беспощадна к тем, кто не уважает её место. С одной ночи 2076 года людей Night Corp на порог не пускает. Почему, не обсуждает.'],
-        ['Мистер Голубые Глаза','canon','Имя, которое ходит среди фиксеров и нетраннеров. Дорогой костюм, глаза со слабым неестественным голубым свечением. Его видят там, где меняется власть. Говорят, через его глаза смотрит кто-то ещё.'],
+        ['Роман Коваль','author','Отец Десмонда, 54. Русский мигрант, до сих пор с мусорщиками, теперь скорее скупщик. Пьёт, громко смеётся, бьёт без предупреждения. Отец и сын не разговаривают годами.'],
+        ['Мама Уэллс · El Coyote Cojo','canon','Бар в Хейвуде, почти нейтральная территория. Мама Уэллс тёплая со своими и беспощадна к тем, кто не уважает её место. <span class="tag author">авторский лор</span> С одной ночи 2076 года людей Night Corp на порог не пускает. Почему, не обсуждает.'],
+        ['Мистер Голубые Глаза','canon','Человек в дорогом костюме, глаза со слабым неестественным голубым свечением. Появляется рядом с делом Пералесов и в других сюжетах игры. Кто он и на кого работает, игра не раскрывает. <span class="tag author">авторский лор</span> Среди фиксеров и нетраннеров говорят, что через его глаза смотрит кто-то ещё.'],
       ]},
     ],
     slangT:'Сленг',
@@ -832,7 +813,7 @@ en:{
     stamp:'Reinstated',
     photoCap:'ID photo, updated after rehabilitation',
     f:[
-      ['Name','Desmond Kravets'],
+      ['Name','Desmond Koval'],
       ['Employee ID','NC-IS-0736'],
       ['Department','Internal Security, night shift'],
       ['Position','Investigator'],
@@ -850,7 +831,7 @@ en:{
       ['Injury','Neuro-cybernetic burn. Hostile netrunner attack during the nomad raid on the maglev tunnel site, late 2077. Optics and neural interface burned out.'],
       ['Rehabilitation',()=>`${R(3)} months, company clinic. New optics installed.`],
       ['Follow-up','Routine optic calibration. Headaches and harsh light for a few hours afterwards are normal.'],
-      ['Side effects',()=>`Partial memory gaps (expected after the burn). ${R(14,1)}`],
+      ['Side effects',()=>`Partial memory gaps (expected after the burn). ${R(14)}`],
       ['Medical record',()=>`${R(18)} <span class="tag red">clearance 4</span>`],
     ],
     chromeT:'Cyberware',
@@ -858,7 +839,7 @@ en:{
       ['Gorilla Arms','From mid-forearm down: a heavy gunmetal frame of plates and struts, fully mechanical hands. Cold to the touch.'],
       ['Subdermal armor','Chest and neck. Reinforced tendons and ankles.'],
       ['Kiroshi optics','Corporate-grade, new. Installed during rehab, iris tuned to his natural grey-green.'],
-      ['Neural interface',()=>`Ports at the base of the skull. Fresh scars at the temples and nape. ${R(10,2)}`],
+      ['Neural interface',()=>`Ports at the base of the skull. Fresh scars at the temples and nape. ${R(10)}`],
       ['Berserk OS','Installed. The employee almost never activates it.'],
     ],
     evalT:'Supervisor\'s evaluation',
@@ -866,19 +847,19 @@ en:{
       ['Self-control',4,'Quick-tempered but manages it. Defuses conflict with a pause: lowers his voice, leaves the room. No incidents on record apart from one damaged locker.'],
       ['Protecting staff',5,'Steps into other people\'s conflicts even when it\'s none of his business. Overprotective: coworkers complain he makes them eat.'],
       ['Crisis response',5,'Under fire, the calmest person in the room: short commands, clear priorities. Off duty, prone to reckless driving.'],
-      ['Working with people',4,()=>`Observant, reads lies well. Tells the guilty from the merely scared. No complaints from detainees. ${R(12,3)}`],
+      ['Working with people',4,()=>`Observant, reads lies well. Tells the guilty from the merely scared. No complaints from detainees. ${R(12)}`],
       ['Loyalty to the company',5,'High. Openly grateful to the company for his treatment. Reacts sharply to "corpo dog" jokes.'],
     ],
     prevT:'Service history',
     prev:[
       ['before 2071',()=>`Fixer contracts, private security. ${R(16)}`],
-      ['2071–2077',()=>`Tactical wing. Extractions, site protection, ${R(20,4)}`],
+      ['2071–2077',()=>`Tactical wing. Extractions, site protection, ${R(20)}`],
       ['late 2077','Severely injured at the maglev tunnel site.'],
       ['2078','Transferred to Internal Security.'],
-      ['Pre-injury profile',()=>`${R(22,5)}`],
+      ['Pre-injury profile',()=>`${R(22)}`],
     ],
     persT:'Personal',
-    pers:()=>`A bike, a fast car and an empty highway at night. The gym. Strong black coffee, cheap street food, loud music in the car. Smokes, less than before. Dislikes corporate double-talk, bullies, pity, med-bays and sitting still. Next of kin: father, Roman Kravets (no contact). Mother deceased. ${R(8,6)}`,
+    pers:()=>`A bike, a fast car and an empty highway at night. The gym. Strong black coffee, cheap street food, loud music in the car. Smokes, less than before. Dislikes corporate double-talk, bullies, pity, med-bays and sitting still. Next of kin: father, Roman Koval (no contact). Mother deceased. ${R(8)}`,
     quotesT:'From conversation logs',
     quotes:[['Breathe. You\'re good. I got it.','night shift, floor 41'],['Eat something, you look like shit.','break room'],['Huh. Don\'t remember that.','elevator lobby']],
     stripT:'Surveillance material',
@@ -889,13 +870,7 @@ en:{
     bp:{rules:'Pick codes in turn: <b>the first one in the highlighted top row</b>, the next in the column of that code, then in a row again, and so on. Assemble the daemon sequence in the buffer.',
         matrix:'Code matrix',time:'Time',buffer:'Buffer',daemon:'Daemon',dname:'Clearance bypass · level 4',
         start:'The timer starts with your first move.',fail:'FAILED. Buffer full, sequence not assembled.',stuck:'FAILED. No moves left.',timeout:'TIME OUT. The network rebuilt the matrix.',retry:'Try again',cell:'Code'},
-    prompt:'Enter access key',
-    go:'Enter',
-    found:'Key fragments found',
-    deny:n=>`DENIED. Wrong key. Attempt ${n}.`,
-    hint:'SYSTEM: the key is under the black bars in this file. Hover over them or tap them.',
-    steps:['daemon uploaded…','bypassing level 4 ICE…','lifting redactions…','ACCESS GRANTED'],
-    ph:'______'
+    steps:['daemon uploaded…','bypassing level 4 ICE…','lifting redactions…','ACCESS GRANTED']
   },
   cap:{t:'Unlisted item',p:'A blue baseball cap. A torn hole above the brim, edges pushed outward. Not on any evidence inventory.',r:'It was behind the gun rack. He doesn\'t know whose it is.',c:'Put it back'},
   truth:{
@@ -928,8 +903,8 @@ en:{
     ],
     s3:'What was done to him',
     hkT:'The mirror test',
-    hk:`<p><span class="tag canon">canon</span> Among the data stolen by Sandra Dorsett is an internal Night Corp report on Operation Carpe Noctem. An AI called CN-07 learned to bypass the security on low-level employees' devices. The subjects never knew they were being tested. Subject HK-13, classified at the start as "calm and empathetic," became psychopathic after covert conditioning: he strangled a colleague over a dispute about coffee and jumped from a sixteenth-floor window.</p>
-<p><span class="tag author">author's lore</span> Desmond is the mirror image of that test. HK-13 was turned from empathetic to psychopathic. Desmond the sadist was taken the other way, and "calm and empathetic" is literally his target profile. Only a small research group and whoever signed off at the top know. Internal Security, Hale and Reyes do not.</p>`,
+    hk:`<p><span class="tag canon">canon</span> Night Corp, the AI CN-07 and Operation Carpe Noctem exist in the game. Among the data stolen by Sandra Dorsett is an internal Night Corp report on Operation Carpe Noctem. An AI called CN-07 learned to bypass the security on low-level employees' devices. The subjects never knew they were being tested. Subject HK-13, classified at the start as "calm and empathetic," became psychopathic after covert conditioning: he strangled a colleague over a dispute about coffee and jumped from a sixteenth-floor window.</p>
+<p><span class="tag author">author's lore</span> Using CN-07 on Desmond is this bot\'s invention. Desmond is the mirror image of that test. HK-13 was turned from empathetic to psychopathic. Desmond the sadist was taken the other way, and "calm and empathetic" is literally his target profile. Only a small research group and whoever signed off at the top know. Internal Security, Hale and Reyes do not.</p>`,
     chainT:'How it works',
     chain:[
       ['Kiroshi optics','Hidden firmware. Sensor and channel: faces, reactions, surroundings and his own behavior.'],
@@ -990,20 +965,20 @@ en:{
         ['The 2023 Holocaust','canon','On August 20, 2023, a Militech-backed strike team hit Arasaka Tower with a tactical nuke. Thousands died. A memorial stands at Corpo Plaza, and the new Arasaka Tower rises on the same ground.'],
       ]},
       {t:'Districts',items:[
-        ['Watson · Northside','canon','"The bad part of town." Northside is the industrial zone: warehouses, factories, dead plants. Maelstrom turf and Scavenger dens. Desmond grew up here. Next door: Kabuki\'s cheap-chrome markets and Little China.'],
+        ['Watson · Northside','canon','"The bad part of town." Northside is the industrial zone: warehouses, factories, dead plants. Maelstrom turf and Scavenger dens. Next door: Kabuki\'s cheap-chrome markets and Little China. <span class="tag author">author\'s lore</span> Desmond grew up here.'],
         ['City Center · Corpo Plaza','canon','Glass towers, private checkpoints, cameras on every corner. Headquarters of Night Corp, Militech and Arasaka. Street crime seems to be near zero: corporate security handles everything quietly, in-house.'],
-        ['Heywood','canon','The Latino district, home of the Valentinos. The Glen has city hall, offices and expensive apartments; Desmond lives here. Vista del Rey is poorer and older, with murals and families who have lived there for generations. Corporate redevelopment is pushing old residents out.'],
+        ['Heywood','canon','The Latino district, home of the Valentinos. The Glen has city hall, offices and expensive apartments. Vista del Rey is poorer and older, with murals and families who have lived there for generations. Corporate redevelopment is pushing old residents out. <span class="tag author">author\'s lore</span> Desmond lives in the Glen.'],
         ['Westbrook','canon','Where money comes to have fun. Japantown\'s neon and clubs, Jig-Jig Street under the Tyger Claws, Charter Hill, the mansions of North Oak.'],
         ['Santo Domingo','canon','One of the oldest districts: factories, power plants, crowded megabuildings. The corps treat it as a testing ground. 6th Street turf.'],
         ['Pacifica & Dogtown','canon','A failed resort: half-built hotels, dry pools. The Voodoo Boys hold it and the police don\'t patrol. Inside lies Dogtown, a walled enclave run by the Barghest militia.'],
         ['The Badlands','canon','Dry plains outside the city: burning oil fields, abandoned towns, nomad clans. No law; the clans police themselves.'],
       ]},
       {t:'Night Corp',items:[
-        ['Public face','canon','A corporation built on the legacy of Richard Night, the city\'s founder, murdered in 1998. Urban development, transit, utilities, philanthropy. It keeps the city\'s lights and trains running and presents itself as the most civic-minded corp in town.'],
-        ['Reputation','canon','Quiet, secretive, suspiciously close to City Hall. Rumors of people who "aren\'t themselves anymore," of AI research no one can see, of surveillance that is too good. Nothing has ever stuck. Employees speak of the company with a loyalty that seems a little too even.'],
+        ['Public face','canon','A corporation built on the legacy of Richard Night, the city\'s founder, murdered in 1998. Urban development, infrastructure, transit projects such as the maglev. It presents itself as a corporation that works for the city.'],
+        ['Reputation','author','Quiet, secretive, suspiciously close to City Hall. Rumors of people who "aren\'t themselves anymore," of AI research no one can see, of surveillance that is too good. Nothing has ever stuck. Employees speak of the company with a loyalty that seems a little too even.'],
         ['Corporate security','author','The tactical wing is the field force: extractions, leak suppression, dirty work, squads of four to six. Internal Security investigates the company\'s own people: leaks, theft, loyalty checks, interrogations. Investigators work in pairs, and medical files sit behind high clearance.'],
         ['Special Measures','author','The section of Internal Security for "hard interrogations," run by Eugene Hale. Its rooms are on sub-level 4 of the tower: bolted tables, restraint rings, a floor drain. Not everyone walks out.'],
-        ['The maglev raid','canon','In late 2077 Aldecaldo nomads broke into Night Corp\'s maglev tunnel construction site. Militech held the perimeter, with a few Night Corp field men among the guards. A hostile netrunner tore through the guards\' implants. Desmond was among the wounded.'],
+        ['The maglev raid','canon','In one of the main story\'s endings (the mission "Forward to Death"), Aldecaldo nomads led by Saul Bright and Panam Palmer attack Night Corp\'s maglev tunnel construction site in the Badlands in 2077. Militech guards the site. <span class="tag author">author\'s lore</span> A few Night Corp field men were among the guards, and a hostile netrunner tore through their implants. Desmond was among the wounded.'],
       ]},
       {t:'Gangs',items:[
         ['Maelstrom','canon','An extreme body-mod gang in Northside. Multiple optics, LED-studded faces, limbs replaced for looks. They worship chrome, destruction and spectacle, and treat fear as currency. Stronghold: the abandoned All Foods plant.'],
@@ -1017,20 +992,20 @@ en:{
       ]},
       {t:'Chrome & the Net',items:[
         ['Chrome & ripperdocs','canon','Chrome is class. Heavy visible hardware means street, military or desperate. Subtle expensive implants mean money. Ripperdocs install chrome unlicensed, cash only, no questions. Corporate clinics cost more and report everything.'],
-        ['Kiroshi','canon','Japanese maker and market leader in cybernetic eyes. On the street, "kiroshi" means any optic. Corporate optics issued by an employer run company software, are serviced only at company clinics and need regular calibration.'],
-        ['Berserk','canon','A combat operating system. Floods the body with stimulants and pushes muscle and armor past normal limits. Leaves you shaking and drained. Popular with enforcers and Maelstrom. Heavy use is linked to cyberpsychosis.'],
+        ['Kiroshi','canon','Japanese maker and market leader in cybernetic eyes. On the street, "kiroshi" means any optic. <span class="tag author">author\'s lore</span> Corporate optics issued by an employer run company software, are serviced only at company clinics and need regular calibration.'],
+        ['Berserk','canon','A combat operating system. Floods the body with stimulants and pushes muscle and armor past normal limits. Leaves you shaking and drained. Popular with enforcers and Maelstrom. <span class="tag author">author\'s lore</span> Heavy use is linked to cyberpsychosis.'],
         ['Netrunning','canon','Jacking straight into a network through a cyberdeck and neural port. ICE guards data, daemons attack, quickhacks hit in real time: blinding optics, overheating implants, frying nervous systems. A hostile runner can burn out a target\'s interface and eyes from a distance.'],
-        ['Braindance','canon','A recording of a full experience: sight, sound, touch, emotion. Legal BD is a huge industry; XBDs with real violence are illegal and everywhere. A raw, unedited recording feels flat and overexposed.'],
-        ['Cyberpsychosis','canon','A breakdown from too much or badly integrated chrome. Empathy and impulse control erode. There is no cure. Active cases get MaxTac. A chromed man who acts strangely is a suspect before he is a patient.'],
+        ['Braindance','canon','A recording of a full experience: sight, sound, touch, emotion. Legal BD is a huge industry; XBDs with real violence are illegal and everywhere. <span class="tag author">author\'s lore</span> A raw, unedited recording feels flat and overexposed.'],
+        ['Cyberpsychosis','canon','A breakdown from too much or badly integrated chrome. Empathy and impulse control erode. There is no cure. Active cases get MaxTac. <span class="tag author">author\'s lore</span> A chromed man who acts strangely is a suspect before he is a patient.'],
         ['The Blackwall','canon','NetWatch\'s barrier between the human Net and the rogue AIs that grew in the ruins of the old Net after the 2022 DataKrash. No one really knows what is on the other side.'],
       ]},
       {t:'People around Desmond',items:[
         ['Eugene Hale','author','Head of Special Measures, formerly team leader of the squad Desmond served in. A sadist under control: cold, methodical, never raises his voice. He was wary of the old Desmond. He needles the new one for "going soft."'],
         ['Tito Reyes','author','Tactical wing operative who served with Desmond for years. A follower by nature: the old Desmond was his alpha. He still feeds Desmond the old lines and waits for the old answers. Gold chrome canine, chewing tobacco, laughs too loud.'],
         ['Glitch','author','A Maelstrom ganger, Desmond\'s childhood friend, as far as Northside allows friends. Steel jaw, three red optics. Calls Desmond "Rus." Recognizes him on sight. Desmond doesn\'t remember him at all.'],
-        ['Roman Kravets','author','Desmond\'s father, 54. A Russian immigrant still running with Scavengers, now more of a fence. Drinks, laughs loud, hits without warning. Father and son haven\'t spoken in years.'],
-        ['Mama Welles · El Coyote Cojo','canon','A bar in Heywood, near-neutral ground. Mama Welles is warm with her own and merciless to anyone who disrespects her place. Since one night in 2076, no one from Night Corp gets through her door. She won\'t say why.'],
-        ['Mr. Blue Eyes','canon','A name that circulates among fixers and netrunners. Expensive suit, eyes with a faint, unnatural blue glow. He turns up wherever power changes hands. They say someone else looks out through his eyes.'],
+        ['Roman Koval','author','Desmond\'s father, 54. A Russian immigrant still running with Scavengers, now more of a fence. Drinks, laughs loud, hits without warning. Father and son haven\'t spoken in years.'],
+        ['Mama Welles · El Coyote Cojo','canon','A bar in Heywood, near-neutral ground. Mama Welles is warm with her own and merciless to anyone who disrespects her place. <span class="tag author">author\'s lore</span> Since one night in 2076, no one from Night Corp gets through her door. She won\'t say why.'],
+        ['Mr. Blue Eyes','canon','A man in an expensive suit, eyes with a faint, unnatural blue glow. He turns up around the Peralez case and in other storylines. The game never reveals who he is or who he works for. <span class="tag author">author\'s lore</span> Fixers and netrunners say someone else looks out through his eyes.'],
       ]},
     ],
     slangT:'Slang',
@@ -1112,7 +1087,6 @@ function dossier(){
   const t = T[lang].dossier;
   const score = n => `<div class="score" aria-label="${n}/5">${[1,2,3,4,5].map(i=>`<i class="${i<=n?'on':''}"></i>`).join('')}</div>`;
   const rows = arr => `<div class="tblwrap"><table class="spec"><tbody>${arr.map(r=>`<tr><th scope="row">${r[0]}</th><td>${val(r[1])}</td></tr>`).join('')}</tbody></table></div>`;
-  const found = [1,2,3,4,5,6].map(i=>`<span class="${seen.has(String(i))?'on':''}">${seen.has(String(i))?KEY[i-1]:'·'}</span>`).join('');
   return `
   <section class="fade">
     <div class="cut file">
@@ -1166,6 +1140,7 @@ function truth(){
   return `
   <section class="sysHead fade">
     <div style="display:grid;gap:22px;min-width:0">
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="tag author">${lang==='ru'?'авторский лор':'author\'s lore'}</span></div>
       <div class="readout">${t.readout.map((r,i)=>`<span>${r[0]} :: <b class="${i===3?'redv':''}">${r[1]}</b></span>`).join('')}</div>
       <h1><span class="glitch" data-text="${esc(t.h1)}">${t.h1}</span></h1>
       <p class="lead">${t.lead}</p>
@@ -1185,7 +1160,7 @@ function truth(){
     <div class="traits">${t.traits.map(x=>`<div class="cut"><h3>${x[0]}</h3><p>${x[1]}</p></div>`).join('')}</div>
   </section>
   <section>
-    <div class="sechead"><h2>${t.s2}</h2></div>
+    <div class="sechead"><h2>${t.s2}</h2><span class="tag author">${lang==='ru'?'авторский лор':'author\'s lore'}</span></div>
     <div class="seg" role="group" aria-label="${t.s2}">
       <button type="button" class="b" id="ba-before" aria-pressed="${baMode==='before'}">${t.baBefore}</button>
       <button type="button" class="a" id="ba-after" aria-pressed="${baMode==='after'}">${t.baAfter}</button>
@@ -1193,19 +1168,19 @@ function truth(){
     <div class="cut ba ${baMode}" id="ba">${t.ba.map(r=>`<div class="r"><h3>${r[0]}</h3><p data-b="${esc(r[1])}" data-a="${esc(r[2])}">${baMode==='before'?r[1]:r[2]}</p></div>`).join('')}</div>
   </section>
   <section>
-    <div class="sechead"><h2>${t.s3}</h2></div>
+    <div class="sechead"><h2>${t.s3}</h2><span class="tag canon">${lang==='ru'?'канон':'canon'}</span><span class="tag author">${lang==='ru'?'авторский лор':'author\'s lore'}</span></div>
     <div class="prose" style="margin-bottom:36px"><h3 class="label">${t.hkT}</h3>${t.hk}</div>
-    <h3 class="label" style="margin-bottom:14px">${t.chainT}</h3>
+    <h3 class="label" style="margin-bottom:14px">${t.chainT} <span class="tag author">${lang==='ru'?'авторский лор':'author\'s lore'}</span></h3>
     <div class="chain">${t.chain.map((c,i)=>`<div class="cut"><span class="ar">${['SENSOR','EXEC','AI CORE','UPLINK'][i]}</span><h3>${c[0]}</h3><p>${c[1]}</p></div>`).join('')}</div>
     <p class="mono" style="font-size:13px;color:var(--ice);margin:12px 0 36px">${t.chainNote}</p>
-    <h3 class="label" style="margin-bottom:14px">${t.stagesT}</h3>
+    <h3 class="label" style="margin-bottom:14px">${t.stagesT} <span class="tag author">${lang==='ru'?'авторский лор':'author\'s lore'}</span></h3>
     <ol class="stages">${t.stages.map((s,i)=>`<li class="cut${i===3?' live':''}"><span class="n">${s[0]}</span><div><h3>${s[1]}</h3><p>${s[2]}</p></div><span class="chip${i===3?' live':''}">${s[3]}</span></li>`).join('')}</ol>
-    <h3 class="label" style="margin:36px 0 14px">${t.editsT}</h3>
+    <h3 class="label" style="margin:36px 0 14px">${t.editsT} <span class="tag author">${lang==='ru'?'авторский лор':'author\'s lore'}</span></h3>
     <div class="edits">${t.edits.map(e=>`<div class="cut"><h3>${e[0]}</h3><p>${e[1]}</p><span class="ex">${e[2]}</span></div>`).join('')}</div>
     <p style="margin-top:14px;color:#c9ced7;max-width:66ch">${t.editsNote}</p>
   </section>
   <section>
-    <div class="sechead"><h2>${t.s4}</h2></div>
+    <div class="sechead"><h2>${t.s4}</h2><span class="tag author">${lang==='ru'?'авторский лор':'author\'s lore'}</span></div>
     <div class="intr">
       <figure><div class="hud redf"><img src="img/mirror-error.webp" alt="${t.mirrorCap}" loading="lazy"></div><figcaption class="label" style="margin-top:8px;text-transform:none;letter-spacing:.04em">${t.mirrorCap}</figcaption></figure>
       <div style="display:grid;gap:18px;min-width:0"><p class="lead" style="font-size:17px">${t.intrLead}</p>
@@ -1213,13 +1188,13 @@ function truth(){
     </div>
   </section>
   <section>
-    <div class="sechead"><h2>${t.s5}</h2></div>
+    <div class="sechead"><h2>${t.s5}</h2><span class="tag author">${lang==='ru'?'авторский лор':'author\'s lore'}</span></div>
     <p style="margin-bottom:16px;color:#c9ced7">${t.axesLead}</p>
     <div class="axes">${t.axes.map(a=>`<div class="cut"><h3>${a[0]}</h3><p>${a[1]}</p></div>`).join('')}</div>
     <p class="lead" style="margin-top:28px">${t.fourth}</p>
   </section>
   <section>
-    <div class="cut sealed"><span class="label" style="color:var(--ink)">${t.sealedT}</span><p style="color:#c9ced7">${t.sealed}</p></div>
+    <div class="cut sealed"><span class="label" style="color:var(--ink)">${t.sealedT} <span class="tag author">${lang==='ru'?'авторский лор':'author\'s lore'}</span></span><p style="color:#c9ced7">${t.sealed}</p></div>
     <p style="margin-top:28px"><button type="button" class="relock" id="relock">${t.relock}</button></p>
   </section>`;
 }
@@ -1234,7 +1209,7 @@ function lore(){
     <div class="filter"><span class="mono" style="color:var(--faint)">/</span><input id="lore-q" type="search" placeholder="${t.filter}" aria-label="${t.filter}"></div>
     <div id="lore-list">
     ${t.groups.map(g=>`<div class="lg" style="margin-bottom:40px"><h3 class="label" style="margin-bottom:14px;color:var(--ink)">${g.t}</h3>
-      <div class="cards">${g.items.map(it=>`<article class="cut card" data-s="${esc((it[0]+' '+it[2]).toLowerCase())}"><div class="h"><h3>${it[0]}</h3>${tagLbl(it[1])}</div><p>${it[2]}</p></article>`).join('')}</div></div>`).join('')}
+      <div class="cards">${g.items.map(it=>`<article class="cut card" data-s="${esc((it[0]+' '+it[2].replace(/<[^>]+>/g,'')).toLowerCase())}"><div class="h"><h3>${it[0]}</h3>${tagLbl(it[1])}</div><p>${it[2]}</p></article>`).join('')}</div></div>`).join('')}
     <div class="lg"><h3 class="label" style="margin-bottom:14px;color:var(--ink)">${t.slangT}</h3>
       <div class="tblwrap"><table class="slang"><tbody>${t.slang.map(s=>`<tr class="card-row" data-s="${esc((s.join(' ')).toLowerCase())}"><td>${s[0]}</td>${lang==='ru'?`<td>${s[1]}</td>`:''}<td>${s[2]}</td></tr>`).join('')}</tbody></table></div></div>
     </div>
@@ -1303,23 +1278,12 @@ function route(){
   else if(changed) window.scrollTo(0,0);
 }
 
-function markSeen(k){
-  if(seen.has(k)) return;
-  seen.add(k);
-  store.set('desmond-seen',[...seen].join(''));
-  document.querySelectorAll(`.rd.key[data-k="${k}"]`).forEach(e=>e.classList.add('seen'));
-  const f = document.querySelector('.found');
-  if(f){ const s=f.children[+k-1]; s.classList.add('on'); s.textContent=KEY[+k-1]; }
-  const l = document.querySelector('.term > .label');
-  if(l) l.textContent = `${T[lang].dossier.found}: ${seen.size}/6`;
-}
-
 function bind(){
   view.querySelectorAll('.rd').forEach(el=>{
-    const open = ()=>{ el.classList.add('open'); if(el.dataset.k) markSeen(el.dataset.k); };
+    const open = ()=>el.classList.add('open');
     el.addEventListener('mouseenter', open);
     el.addEventListener('focus', open);
-    el.addEventListener('click', ()=>{ el.classList.toggle('open'); if(el.dataset.k) markSeen(el.dataset.k); });
+    el.addEventListener('click', ()=>el.classList.toggle('open'));
     el.addEventListener('mouseleave', ()=>el.classList.remove('open'));
     el.addEventListener('blur', ()=>el.classList.remove('open'));
   });
@@ -1403,12 +1367,10 @@ const fmt = s => { s=Math.max(0,s); return Math.floor(s/60)+':'+String(s%60).pad
 function bpRender(){
   const box = document.getElementById('bp'); if(!box||!bpState) return;
   const st = bpState, t = T[lang].dossier.bp, m = bpMatch();
-  const nextTgt = st.over ? null : st.seq[m];
   let cells='';
   for(let r=0;r<N;r++) for(let c=0;c<N;c++){
     const used = st.used.has(r*N+c), line = !st.over && (st.axis==='row'?r===st.idx:c===st.idx), ok = bpValid(r,c);
-    const tgt = false;
-    cells += `<button type="button" data-r="${r}" data-c="${c}" class="${used?'used':''}${line?' line':''}${ok?' ok':''}${tgt?' tgt':''}" ${ok?'':'tabindex="-1" aria-disabled="true"'} aria-label="${t.cell} ${st.grid[r][c]}, ${r+1}:${c+1}">${st.grid[r][c]}</button>`;
+    cells += `<button type="button" data-r="${r}" data-c="${c}" class="${used?'used':''}${line?' line':''}${ok?' ok':''}" ${ok?'':'tabindex="-1" aria-disabled="true"'} aria-label="${t.cell} ${st.grid[r][c]}, ${r+1}:${c+1}">${st.grid[r][c]}</button>`;
   }
   const buf = Array.from({length:BUF},(_,i)=>`<span class="${st.buf[i]?'f':''}">${st.buf[i]||''}</span>`).join('');
   const seq = st.seq.map((x,i)=>`<span class="${i<m?'m':''}">${x}</span>`).join('');
