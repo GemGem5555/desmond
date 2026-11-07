@@ -576,7 +576,7 @@ ru:{
     warnList:['насилие и пытки','убийство','садизм в прошлом героя','вмешательство в личность без согласия','откровенные сцены, доминирование','мат'],
     whereT:'Скачать бота',
     where:`Карточка в формате PNG для SillyTavern и похожих фронтендов. Лорбук <span class="mono">Cyberpunk CN-07</span> уже встроен в карточку: в нём город, люди вокруг Десмонда и всё, что от него скрыто.`,
-    dl:[['files/Desmond_Koval.png','Карточка','PNG · 1,2 МБ'],['files/Cyberpunk_CN-07.json','Лорбук','JSON · 85 КБ']],
+    dl:[['files/Desmond_Koval.png?v=2','Карточка','PNG · 1,2 МБ'],['files/Cyberpunk_CN-07.json','Лорбук','JSON · 85 КБ']],
     steps:['Перетащи PNG в окно импорта персонажей SillyTavern.','Когда таверна предложит импортировать встроенный лорбук, согласись. Отдельный JSON пригодится для других фронтендов или чтобы привязать лорбук вручную через World Info.'],
     tg:'Телеграм-канал автора'
   },
@@ -851,7 +851,7 @@ en:{
     warnList:['violence and torture','murder','the hero\'s sadistic past','non-consensual personality modification','explicit scenes, dominance','strong language'],
     whereT:'Download the bot',
     where:`A PNG character card for SillyTavern and similar frontends. The <span class="mono">Cyberpunk CN-07</span> lorebook is already embedded in the card: it holds the city, the people around Desmond and everything kept from him.`,
-    dl:[['files/Desmond_Koval.png','Character card','PNG · 1.2 MB'],['files/Cyberpunk_CN-07.json','Lorebook','JSON · 85 KB']],
+    dl:[['files/Desmond_Koval.png?v=2','Character card','PNG · 1.2 MB'],['files/Cyberpunk_CN-07.json','Lorebook','JSON · 85 KB']],
     steps:['Drag the PNG into SillyTavern\'s character import.','When the tavern offers to import the embedded lorebook, accept. The separate JSON is for other frontends, or for attaching the lorebook by hand through World Info.'],
     tg:'Author\'s Telegram channel'
   },
@@ -1139,7 +1139,7 @@ function home(){
     <div class="cut blk" style="display:grid;gap:14px;align-content:start">
       <span class="label" style="color:var(--yellow)">${t.whereT}</span>
       <p>${t.where}</p>
-      <div class="dls">${t.dl.map(d=>`<a class="dlbtn" href="${d[0]}" download><span class="dlico" aria-hidden="true">↓</span><span><b>${d[1]}</b><small>${d[2]}</small></span></a>`).join('')}</div>
+      <div class="dls">${t.dl.map(d=>`<a class="dlbtn" href="${d[0]}" download="${d[0].split('/').pop().split('?')[0]}"><span class="dlico" aria-hidden="true">↓</span><span><b>${d[1]}</b><small>${d[2]}</small></span></a>`).join('')}</div>
       <ol class="dlsteps">${t.steps.map(x=>`<li>${x}</li>`).join('')}</ol>
       <a class="tglink" href="https://t.me/gemma_gemstone" target="_blank" rel="noopener"><span>${t.tg}</span><span class="mono">t.me/gemma_gemstone ↗</span></a>
     </div>
