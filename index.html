@@ -430,6 +430,21 @@ footer .wrap{display:grid;gap:6px}
 .modal p.riddle{font-family:var(--mono);color:var(--ice);font-size:14px}
 .modal button{all:unset;cursor:pointer;justify-self:start;font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;border:1px solid #3b74c4;padding:8px 14px;color:#c9d6ea}
 .modal button:focus-visible{outline:2px solid var(--ice)}
+.modal .box{max-height:100%;overflow-y:auto}
+.modal .box.wide{max-width:660px}
+.modal .mbtns{display:flex;gap:10px;flex-wrap:wrap}
+.modal button.pri{background:#3b74c4;color:#fff}
+.modal button.pri:hover{background:#5aa2ff}
+.modal .nhead{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.modal h2.ntitle{font-family:var(--display);font-weight:800;font-size:clamp(20px,4vw,28px);letter-spacing:.03em;color:#8fbfff;text-shadow:0 0 12px rgba(90,162,255,.5)}
+.modal .nmeta{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--red);border-bottom:1px solid #1f3a63;padding-bottom:12px}
+.modal .box.wide p{line-height:1.65}
+.nightbtn{all:unset;cursor:pointer;justify-self:start;display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 14px;border:1px solid #3b74c4;background:#081224;color:#8fbfff;
+  font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;transition:box-shadow .15s,background .15s}
+.nightbtn svg{width:22px;height:22px;color:#5aa2ff;filter:drop-shadow(0 0 6px #5aa2ff)}
+.nightbtn .tag{border-color:var(--red);color:var(--red);font-size:10px}
+.nightbtn:hover{background:#0d1b33;box-shadow:0 0 16px rgba(90,162,255,.35)}
+.nightbtn:focus-visible{outline:2px solid var(--ice);outline-offset:3px}
 
 .fade{animation:fadein .35s ease-out}
 @keyframes fadein{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}
@@ -613,6 +628,19 @@ ru:{
     steps:['демон загружен…','обход ICE уровня 4…','снятие плашек…','ДОСТУП ПОЛУЧЕН']
   },
   cap:{t:'Объект без описи',p:'Синяя бейсболка. Рваная дыра над козырьком, края вывернуты наружу. В описи изъятых вещей не значится.',r:'Лежала за оружейной стойкой. Он не знает, чья она.',c:'Положить на место'},
+  night:{btn:'Что случилось той ночью',spoiler:'спойлер',
+    warnT:'Спойлер: как погиб брат',
+    warn:'Здесь написано, что на самом деле случилось с братом героини и кто в этом виноват. Если хочешь узнать это в игре, закрой окно.',
+    show:'Показать правду',later:'Не сейчас',
+    t:'Ночь у El Coyote Cojo',
+    meta:'NCPD · Хейвуд · 2076 · дело закрыто',
+    p:[`Десмонд пил в El Coyote Cojo с Тито Рейесом и парнями из группы Хейла. Чарли, семнадцатилетний пацан с района, на спор нацарапал на капоте их машины член.`,
+       `Десмонд поймал его в переулке за баром. Он не торопился: загнал в угол, толкал, унижал, заставил умолять и наслаждался каждой секундой его страха, пока остальные смеялись. Потом сказал ему бежать. Чарли побежал. Метров через двадцать Десмонд выстрелил ему в затылок. Один раз. И рассмеялся.`,
+       `Мама Уэллс вышла из задней двери и увидела, как парень упал и кто держал пистолет. Она дала показания NCPD. В архивном деле от них осталась одна строка: «показания свидетелей: 1 (засекречено)».`,
+       `К утру Night Corp всё зачистила: самооборона при уличном нападении, личность стрелявшего засекречена по запросу третьей стороны. Приказ пришёл сверху, выше Хейла: все, кто там был, молчат. Тито молчит до сих пор, из страха.`,
+       `Кепку Чарли в опись так и не внесли. Тито вытащил её через знакомого из команды зачистки и принёс Десмонду как трофей. Тот повесил её в оружейной рядом с остальными. Во время его реабилитации компания вычистила трофеи из оружейной, но кепка упала за стойку, и её не заметили.`,
+       `Сейчас Десмонд не помнит ничего: воспоминание удалено целиком. Остались тошнота, когда он берёт кепку в руки, и стена там, где должна быть связь.`],
+    close:'Закрыть дело'},
   truth:{
     readout:[['ОБЪЕКТ','Десмонд, NC-IS-0736'],['ПРОТОКОЛ','CN-07 / Carpe Noctem'],['СТАДИЯ','IV, поддержание'],['ОСВЕДОМЛЁН','нет']],
     h1:'Его не починили. Его переписали.',
@@ -873,6 +901,19 @@ en:{
     steps:['daemon uploaded…','bypassing level 4 ICE…','lifting redactions…','ACCESS GRANTED']
   },
   cap:{t:'Unlisted item',p:'A blue baseball cap. A torn hole above the brim, edges pushed outward. Not on any evidence inventory.',r:'It was behind the gun rack. He doesn\'t know whose it is.',c:'Put it back'},
+  night:{btn:'What happened that night',spoiler:'spoiler',
+    warnT:'Spoiler: how your brother died',
+    warn:'This reveals what really happened to the heroine\'s brother and who is to blame. If you want to find out in play, close this window.',
+    show:'Show the truth',later:'Not now',
+    t:'The night at El Coyote Cojo',
+    meta:'NCPD · Heywood · 2076 · case closed',
+    p:[`Desmond was drinking at El Coyote Cojo with Tito Reyes and a few men from Hale's team. Charlie, a seventeen-year-old from the neighborhood, scratched a crude drawing of a dick into the hood of their car on a dare.`,
+       `Desmond caught him in the alley behind the bar. He took his time: cornered him, shoved him around, humiliated him, made him beg, and enjoyed every second of the boy's terror while the others laughed. Then he told him to run. Charlie ran. About twenty meters down the alley, Desmond shot him once in the back of the head. And laughed.`,
+       `Mama Welles came out the back door in time to see the boy fall and who was holding the gun. She gave a statement to NCPD. All that is left of it in the archived file is one line: "witness statements: 1 (sealed)."`,
+       `Night Corp cleaned up by morning: self-defense against a street attack, the shooter's identity sealed at the request of a third party. The order came from above Hale: everyone who was there keeps quiet. Tito still does, out of fear.`,
+       `Charlie's cap never made it into the evidence inventory. Tito pulled it out through a contact on the cleanup crew and brought it to Desmond as a trophy, and Desmond hung it in his armory with the others. During his rehab the company cleared the trophies out of the armory, but the cap had fallen behind the racks and they missed it.`,
+       `Now Desmond remembers none of it: the memory was removed entirely. What remains is the nausea when he picks up the cap, and a wall where the connection should be.`],
+    close:'Close the file'},
   truth:{
     readout:[['SUBJECT','Desmond, NC-IS-0736'],['PROTOCOL','CN-07 / Carpe Noctem'],['STAGE','IV, maintenance'],['AWARE','no']],
     h1:'They didn\'t fix him. They rewrote him.',
@@ -1230,6 +1271,7 @@ function paths(){
           <p class="hook">${p.hook}</p>
           <dl>${p.dl.map(d=>`<dt>${d[0]}</dt><dd>${d[1]}</dd>`).join('')}</dl>
           <div class="tags">${p.tags.map(x=>`<span class="tag">${x}</span>`).join('')}</div>
+          ${p.cls==='p3'?`<button type="button" class="nightbtn" id="night-btn">${ICON.cap}<span>${T[lang].night.btn}</span><span class="tag">${T[lang].night.spoiler}</span></button>`:''}
         </div>
       </article>`).join('')}
     </div>
@@ -1292,6 +1334,8 @@ function bind(){
     gl.hidden = true; document.getElementById('bp').hidden = false;
     bpNew(); const f = document.querySelector('#bp .mx button.ok'); if(f) f.focus();
   });
+  const nb = document.getElementById('night-btn');
+  if(nb) nb.addEventListener('click', openNight);
   const egg = document.getElementById('cap-egg');
   if(egg) egg.addEventListener('click', openCap);
   const bb = document.getElementById('ba-before'), ba = document.getElementById('ba-after');
@@ -1407,7 +1451,27 @@ function openCap(){
   document.getElementById('modal-close').addEventListener('click', closeCap);
   document.getElementById('modal-close').focus();
 }
-function closeCap(){ modal.hidden = true; if(lastFocus) lastFocus.focus(); }
+function openNight(){
+  const n = T[lang].night, box = document.getElementById('modal-box');
+  lastFocus = document.activeElement;
+  box.classList.remove('wide');
+  box.innerHTML = `${ICON.cap.replace('<svg','<svg width="48" height="48"')}<h2 id="modal-t">${n.warnT}</h2><p>${n.warn}</p>
+    <div class="mbtns"><button type="button" class="pri" id="night-show">${n.show}</button><button type="button" id="modal-close">${n.later}</button></div>`;
+  modal.hidden = false;
+  document.getElementById('modal-close').addEventListener('click', closeCap);
+  document.getElementById('night-show').addEventListener('click', ()=>{
+    box.classList.add('wide');
+    box.innerHTML = `<div class="nhead">${ICON.cap.replace('<svg','<svg width="40" height="40"')}<span class="tag author">${lang==='ru'?'авторский лор':'author\'s lore'}</span></div>
+      <h2 id="modal-t" class="ntitle">${n.t}</h2><span class="nmeta">${n.meta}</span>
+      ${n.p.map(x=>`<p>${x}</p>`).join('')}
+      <button type="button" id="modal-close">${n.close}</button>`;
+    box.scrollTop = 0;
+    document.getElementById('modal-close').addEventListener('click', closeCap);
+    document.getElementById('modal-close').focus({preventScroll:true});
+  });
+  document.getElementById('night-show').focus();
+}
+function closeCap(){ modal.hidden = true; document.getElementById('modal-box').classList.remove('wide'); if(lastFocus) lastFocus.focus(); }
 modal.addEventListener('click', e=>{ if(e.target===modal) closeCap(); });
 document.addEventListener('keydown', e=>{ if(e.key==='Escape' && !modal.hidden) closeCap(); });
 
